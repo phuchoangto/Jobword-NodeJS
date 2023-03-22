@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  JOB_SEEKER
+  EMPLOYER
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  TEMPORARY
+  VOLUNTEER
+  OTHER
+}
+
+enum JobStatus {
+  PUBLISHED
+  DRAFT
+  ARCHIVED
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  username  String     @unique
+  password  String
+  role      Role       @default(JOB_SEEKER)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  JobSeeker JobSeeker?
+  Employer  Employer?
+}
+
+model JobSeeker {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  firstName String
+  lastName  String
+  bio       String?
+  skills    String?
+  email     String   @unique
+  phone     String
+  address   String
+  city      String
+  state     String
+  zip       String
+  country   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  CVs       CV[]
+}
+
+model Employer {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique
+  user        User     @relation(fields: [userId], references: [id])
+  name        String
+  description String?
+  website     String?
+  email       String   @unique
+  phone       String
+  address     String
+  city        String
+  state       String
+  zip         String
+  country     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  jobs        Job[]
+}
+
+model JobCategory {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  jobs      Job[]
+}
+
+model Job {
+  id              Int              @id @default(autoincrement())
+  employerId      Int
+  employer        Employer         @relation(fields: [employerId], references: [id])
+  categoryId      Int
+  category        JobCategory      @relation(fields: [categoryId], references: [id])
+  title           String
+  description     String
+  skills          String?
+  location        String
+  salary          String?
+  jobType         JobType
+  experience      String?
+  numberOfVacancy Int?
+  deadline        DateTime
+  jobStatus       JobStatus        @default(PUBLISHED)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  JobApplications JobApplication[]
+}
+
+model CV {
+  id              Int              @id @default(autoincrement())
+  jobSeekerId     Int
+  jobSeeker       JobSeeker        @relation(fields: [jobSeekerId], references: [id])
+  title           String
+  content         String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  JobApplications JobApplication[]
+}
+
+model JobApplication {
+  id        Int      @id @default(autoincrement())
+  jobId     Int
+  job       Job      @relation(fields: [jobId], references: [id])
+  cvId      Int
+  cv        CV       @relation(fields: [cvId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

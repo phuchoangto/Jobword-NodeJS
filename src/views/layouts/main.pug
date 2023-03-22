@@ -1,0 +1,44 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    meta(name='author' content='')
+    meta(name='theme-color' content='#ff8a00')
+    meta(name='description' content='Job Portal HTML Template')
+    meta(name='keywords' content='Employment, Naukri, Shine, Indeed, Job Posting, Job Provider')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title :: Job Word - Job Portal HTML Template ::
+    // Favicon
+    link(rel='shortcut icon' href='images/favicon.png')
+    // CSS
+    link(rel='stylesheet' href='css/bootstrap-grid.css')
+    link(rel='stylesheet' href='css/icons.css')
+    link(rel='stylesheet' href='css/style.css')
+    // Google Fonts
+    link(href='https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800&display=swap' rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap' rel='stylesheet')
+  body
+    include ../partials/preloader
+    // Wrapper
+    #wrapper
+      include ../partials/header
+      block content
+      include ../partials/subscribe
+      include ../partials/footer
+    // Wrapper / End
+    // Scripts
+    script(src='js/jquery-3.3.1.min.js')
+    script(src='js/jquery-migrate-3.0.0.min.js')
+    script(src='js/mmenu.min.js')
+    script(src='js/tippy.all.min.js')
+    script(src='js/simplebar.min.js')
+    script(src='js/bootstrap-slider.min.js')
+    script(src='js/bootstrap-select.min.js')
+    script(src='js/snackbar.js')
+    script(src='js/clipboard.min.js')
+    script(src='js/counterup.min.js')
+    script(src='js/magnific-popup.min.js')
+    script(src='js/slick.min.js')
+    script(src='js/typed.js')
+    script(src='js/custom_jquery.js')
