@@ -18,6 +18,7 @@ passport.use(new Strategy({
             return done(null, false, { message: 'Incorrect email' });
         }
         const validPassword = await bcrypt.compare(password, user.password);
+        console.log(validPassword);
         if (!validPassword) {
             return done(null, false, { message: 'Incorrect password' });
         }

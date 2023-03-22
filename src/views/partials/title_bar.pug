@@ -1,0 +1,12 @@
+mixin title-bar(title)
+  // Titlebar
+  #titlebar.gradient
+    .container
+      .row
+        .col-md-12
+          h2= title
+          nav#breadcrumbs
+            ul
+              li
+                a(href='index-1.html') Home
+              li= title
