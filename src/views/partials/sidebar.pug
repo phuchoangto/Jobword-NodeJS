@@ -1,0 +1,74 @@
+.utf-dashboard-sidebar-item
+  .utf-dashboard-sidebar-item-inner(data-simplebar='')
+    .utf-dashboard-nav-container
+      // Responsive Navigation Trigger
+      a.utf-dashboard-responsive-trigger-item(href='#')
+        span.hamburger.utf-hamburger-collapse-item
+          span.utf-hamburger-box-item
+            span.utf-hamburger-inner-item
+        span.trigger-title Dashboard Navigation Menu
+      // Navigation
+      .utf-dashboard-nav
+        .utf-dashboard-nav-inner
+          .dashboard-profile-box
+            span.avatar-img
+              img.photo(alt='' src='images/user-avatar-placeholder.png')
+            .user-profile-text
+              span.fullname John Williams
+              span.user-role Software Engineer
+          .clearfix
+          ul
+            li.active
+              a(href='dashboard.html')
+                i.icon-material-outline-dashboard
+                |  Dashboard
+            li
+              a(href='dashboard-jobs-post.html')
+                i.icon-line-awesome-user-secret
+                |  Manage Jobs Post
+            li
+              a(href='dashboard-manage-jobs.html')
+                i.icon-material-outline-group
+                |  Manage Jobs 
+                span.nav-tag 5
+            li
+              a(href='dashboard-manage-resume.html')
+                i.icon-material-outline-supervisor-account
+                |  Manage Resume
+            li
+              a(href='dashboard-bookmarks.html')
+                i.icon-feather-heart
+                |  Bookmarks Jobs
+            li
+              a(href='#')
+                i.icon-line-awesome-file-text
+                |  Freelancer Tasks
+              ul.dropdown-nav
+                li
+                  a(href='dashboard-freelancer-manage-tasks-list.html')
+                    i.icon-feather-chevron-right
+                    |  Freelancer Manage Tasks
+                li
+                  a(href='dashboard-manage-bidders-list.html')
+                    i.icon-feather-chevron-right
+                    |  Freelancer Manage Bidders
+                li
+                  a(href='dashboard-freelancer-active-bids.html')
+                    i.icon-feather-chevron-right
+                    |  Freelancer Active Bids
+                li
+                  a(href='dashboard-freelancer-add-post-bids.html')
+                    i.icon-feather-chevron-right
+                    |  Freelancer Post Bids
+            li
+              a(href='dashboard-reviews.html')
+                i.icon-material-outline-rate-review
+                |  Reviews
+            li
+              a(href='dashboard-my-profile.html')
+                i.icon-feather-user
+                |  My Profile
+            li
+              a(href='index-1.html')
+                i.icon-material-outline-power-settings-new
+                |  Logout
