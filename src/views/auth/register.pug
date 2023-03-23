@@ -1,0 +1,109 @@
+extends ../layouts/main
+
+block content
+  include ../partials/title_bar.pug
+  +title-bar(title)
+  
+  // Page Content
+  .container
+    .row
+      .col-xl-6.offset-xl-3
+        .utf-login-register-page-aera.margin-bottom-50
+          .utf-welcome-text-item
+            h3 Create Your New Account!
+            span
+              | Don't Have an Account? 
+              a(href='/login') Log In!
+          
+          form#utf-register-account-form(method='post')
+            .utf-account-type
+              div
+                input#freelancer-radio.utf-account-type-radio(type='radio' name='role' value='EMPLOYER')
+                label.utf-ripple-effect-dark(for='freelancer-radio' title='Employer' data-tippy-placement='top')
+                  i.icon-material-outline-business-center
+                  |  Employer
+              div
+                input#employer-radio.utf-account-type-radio(type='radio' name='role' checked='' value='JOB_SEEKER')
+                label.utf-ripple-effect-dark(for='employer-radio' title='Candidate' data-tippy-placement='top')
+                  i.icon-material-outline-account-circle
+                  |  Job Seeker
+            if errors
+              .notification.error
+                each error in errors
+                  p= error.message
+            .utf-no-border
+              input#name-register.utf-with-border(type='text' name='username' placeholder='Username')
+            .utf-no-border
+              input#emailaddress-register.utf-with-border(type='text' name='email' placeholder='Email')
+            .utf-no-border
+              input#password-register.utf-with-border(type='password' name='password' placeholder='Password')
+            .utf-no-border
+              input#password-repeat-register.utf-with-border(type='password' name='confirmPassword' placeholder='Confirm Password')
+            .checkbox.margin-top-10
+              input#two-step0(type='checkbox')
+              label(for='two-step0')
+                span.checkbox-icon
+                |  I Have Read and Agree to the 
+                a(href='#') Terms & Conditions
+            button.button.full-width.utf-button-sliding-icon.ripple-effect.margin-top-10(type='submit')
+              | Create An Account 
+              i.icon-feather-chevron-right
+
+block scripts
+  script.
+    $(document).ready(function() {
+      // valid password regex
+      $.validator.addMethod("validPassword", function(value, element) {
+        return this.optional(element) || /^[a-zA-Z0-9]{3,30}$/.test(value);
+      }, "Your password must contain only letters and numbers");
+      
+      // valid username regex
+      $.validator.addMethod("validUsername", function(value, element) {
+        return this.optional(element) || /^[a-zA-Z0-9]{3,30}$/.test(value);
+      }, "Your username must contain only letters and numbers");
+
+      // Register Form
+      $("#utf-register-account-form").validate({
+        rules: {
+          username: {
+            required: true,
+            minlength: 3,
+            maxlength: 30,
+            validUsername: true
+          },
+          email: {
+            required: true,
+            email: true
+          },
+          password: {
+            required: true,
+            minlength: 6,
+            validPassword: true
+          },
+          confirmPassword: {
+            required: true,
+            minlength: 6,
+            equalTo: "#password-register"
+          }
+        },
+        messages: {
+          username: {
+            required: "Please enter a username",
+            minlength: "Your username must consist of at least 3 characters",
+            maxlength: "Your username must consist of at most 30 characters",
+            validUsername: "Your username must contain only letters and numbers"
+          },
+          email: "Please enter a valid email address",
+          password: {
+            required: "Please provide a password",
+            minlength: "Your password must be at least 6 characters long",
+            validPassword: "Your password must contain only letters and numbers"
+          },
+          confirmPassword: {
+            required: "Please provide a password",
+            minlength: "Your password must be at least 6 characters long",
+            equalTo: "Please enter the same password as above"
+          }
+        },
+      });
+    });
