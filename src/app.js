@@ -15,6 +15,12 @@ app.use(session({ secret: process.env.SESSION_SECRET || 'secret', resave: false,
 app.use(passport.initialize());
 app.use(passport.session());
 
+// attach user to response locals
+app.use(function(req, res, next) {
+  res.locals.user = req.user;
+  next();
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
