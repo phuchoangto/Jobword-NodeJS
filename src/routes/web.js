@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
 
 var homeController = require('../controllers/homeController');
 var authController = require('../controllers/authController');
@@ -14,6 +15,6 @@ router.get('/logout', authController.logout);
 router.get('/register', authController.register);
 router.post('/register', authController.create);
 
-router.get('/dashboard', dashboardController.index);
+router.get('/dashboard', ensureAuthenticated, dashboardController.index);
 
 module.exports = router;
