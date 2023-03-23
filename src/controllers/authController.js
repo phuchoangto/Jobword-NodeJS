@@ -14,6 +14,15 @@ module.exports = {
         failureRedirect: '/login'
     }),
 
+    logout: (req, res, next) => {
+        req.logout((err) => {
+            if (err) {
+                res.render('auth/login', { title: 'Login', errors: err });
+            }
+        });
+        res.redirect('/login');
+    },
+
     register: (req, res, next) => {
         res.render('auth/register', { title: 'Register' });
     },

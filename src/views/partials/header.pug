@@ -198,46 +198,48 @@ header#utf-header-container-block
               a(href='contact.html') Contact
         .clearfix
       .utf-right-side
-        .utf-header-widget-item
-          a.popup-with-zoom-anim.log-in-button(href='#utf-signin-dialog-block')
-            i.icon-feather-log-in
-            span Sign In
-        .utf-header-widget-item
-          .utf-header-notifications.user-menu
-            .utf-header-notifications-trigger.user-profile-title
-              a(href='#')
-                .user-avatar.status-online
-                  img(src='images/user_small_1.jpg' alt='')
-                .user-name Hi, John!
-            .utf-header-notifications-dropdown-block
-              ul.utf-user-menu-dropdown-nav
-                li
-                  a(href='dashboard.html')
-                    i.icon-material-outline-dashboard
-                    |  Dashboard
-                li
-                  a(href='dashboard-jobs-post.html')
-                    i.icon-line-awesome-user-secret
-                    |  Manage Jobs Post
-                li
-                  a(href='dashboard-manage-jobs.html')
-                    i.icon-material-outline-group
-                    |  Manage Jobs
-                li
-                  a(href='dashboard-bookmarks.html')
-                    i.icon-material-outline-star-border
-                    |  Bookmarks Jobs
-                li
-                  a(href='dashboard-my-profile.html')
-                    i.icon-feather-user
-                    |  My Profile
-                li
-                  a(href='index-1.html')
-                    i.icon-material-outline-power-settings-new
-                    |  Logout
-        span.mmenu-trigger
-          button.hamburger.utf-hamburger-collapse-item(type='button')
-            span.utf-hamburger-box-item
-              span.utf-hamburger-inner-item
+        if !user
+          .utf-header-widget-item
+            a.log-in-button(href='/login')
+              i.icon-feather-log-in
+              span Sign In
+        else
+          .utf-header-widget-item
+            .utf-header-notifications.user-menu
+              .utf-header-notifications-trigger.user-profile-title
+                a(href='#')
+                  .user-avatar.status-online
+                    img(src='images/user_small_1.jpg' alt='')
+                  .user-name Hi, #{user.username}!
+              .utf-header-notifications-dropdown-block
+                ul.utf-user-menu-dropdown-nav
+                  li
+                    a(href='dashboard.html')
+                      i.icon-material-outline-dashboard
+                      |  Dashboard
+                  li
+                    a(href='dashboard-jobs-post.html')
+                      i.icon-line-awesome-user-secret
+                      |  Manage Jobs Post
+                  li
+                    a(href='dashboard-manage-jobs.html')
+                      i.icon-material-outline-group
+                      |  Manage Jobs
+                  li
+                    a(href='dashboard-bookmarks.html')
+                      i.icon-material-outline-star-border
+                      |  Bookmarks Jobs
+                  li
+                    a(href='dashboard-my-profile.html')
+                      i.icon-feather-user
+                      |  My Profile
+                  li
+                    a(href='/logout')
+                      i.icon-material-outline-power-settings-new
+                      |  Logout
+          span.mmenu-trigger
+            button.hamburger.utf-hamburger-collapse-item(type='button')
+              span.utf-hamburger-box-item
+                span.utf-hamburger-inner-item
 .clearfix
 // Header Container / End
