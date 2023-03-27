@@ -35,8 +35,8 @@ block content
                           .col-xl-5.col-md-3.col-sm-4
                             .utf-avatar-wrapper(data-tippy-placement='top' title='Change Profile Picture')
                               img.profile-pic(src='/images/user-avatar-placeholder.png' alt='')
-                              .upload-button
-                              input.file-upload(type='file' accept='image/*' name='profilePic')
+                              .multer-button
+                              input.file-multer(type='file' accept='image/*' name='profilePic')
                           .col-xl-7.col-md-9.col-sm-8
                             .utf-submit-field
                               h5 First Name
@@ -57,13 +57,13 @@ block content
                       .col-xl-12.col-md-6.col-sm-6
                         .utf-submit-field
                           h5 Province
-                          select#select-city.selectpicker.utf-with-border(data-size='10' title='Select Province' name='provinceId' data-live-search="true")
+                          select.selectpicker.utf-with-border(data-size='10' title='Select Province' name='provinceId' data-live-search="true")
                             each province in provinces
                               option(value=province.id selected=(jobSeeker ? jobSeeker.provinceId === province.id : false))= province.name
                       .col-xl-12.col-md-12.col-sm-12
                         .utf-submit-field
                           h5 Bio
-                          textarea.utf-with-border(name='bio' cols='20' rows='3' placeholder='Tell us a little about yourself' value=(jobSeeker ? jobSeeker.bio : ''))= jobSeeker ? jobSeeker.bio : ''
+                          textarea.utf-with-border(name='bio' cols='20' rows='3' placeholder='Tell us a little about yourself')= jobSeeker ? jobSeeker.bio : ''
                       .col-xl-12.col-md-6.col-sm-6
                         .utf-submit-field
                           h5 Skills

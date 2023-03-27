@@ -9,5 +9,5 @@ module.exports = Joi.object().options({ abortEarly: false }).keys({
     provinceId: Joi.string().required(),
     bio: Joi.string().optional(),
     skillIds: Joi.any().optional(),
-    profilePic: Joi.any().optional(),
+    profilePic: Joi.string().optional(),
 });

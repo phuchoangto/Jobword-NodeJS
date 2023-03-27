@@ -7,10 +7,14 @@ require('dotenv').config();
 const passport = require('./config/passport');
 const session = require('express-session');
 const prisma = require('./config/prisma');
+const multer = require('./config/multer');
+
 
 const webRouter = require('./routes/web');
 
 const app = express();
+
+app.use(multer.single('profilePic'));
 
 app.use(session({secret: process.env.SESSION_SECRET || 'secret', resave: false, saveUninitialized: false}));
 app.use(passport.initialize());

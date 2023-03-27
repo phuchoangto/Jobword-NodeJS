@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
 const checkProfile = require('../middlewares/checkProfile');
+const multer = require('../config/multer');
 
 const homeController = require('../controllers/homeController');
 const authController = require('../controllers/authController');
@@ -18,6 +19,6 @@ router.post('/register', authController.create);
 
 router.get('/dashboard', ensureAuthenticated, dashboardController.index);
 router.get('/dashboard/profile', ensureAuthenticated, dashboardController.profile);
-router.post('/dashboard/profile', ensureAuthenticated, dashboardController.updateProfile);
+router.post('/dashboard/profile', ensureAuthenticated, multer.single('profilePic'), dashboardController.updateProfile);
 
 module.exports = router;
