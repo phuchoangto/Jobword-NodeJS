@@ -5,13 +5,13 @@ const bcrypt = require('bcryptjs');
 const { Role } = require('@prisma/client');
 
 module.exports = {
-    login: (req, res, next) => {
+    login: async (req, res, next) => {
         res.render('auth/login', { title: 'Login' });
     },
 
     authenticate: passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login'
+        successRedirect: '/dashboard',
+        failureRedirect: '/login',
     }),
 
     logout: (req, res, next) => {

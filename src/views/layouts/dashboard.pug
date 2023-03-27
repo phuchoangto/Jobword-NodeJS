@@ -8,13 +8,13 @@ html(lang='en')
         meta(name='description' content='Job Portal HTML Template')
         meta(name='keywords' content='Employment, Naukri, Shine, Indeed, Job Posting, Job Provider')
         meta(name='viewport' content='width=device-width, initial-scale=1.0')
-        title :: Job Word - Job Portal HTML Template ::
+        title= title
         // Favicon
-        link(rel='shortcut icon' href='images/favicon.png')
+        link(rel='shortcut icon' href='/images/favicon.png')
         // CSS
-        link(rel='stylesheet' href='css/bootstrap-grid.css')
-        link(rel='stylesheet' href='css/icons.css')
-        link(rel='stylesheet' href='css/style.css')
+        link(rel='stylesheet' href='/css/bootstrap-grid.css')
+        link(rel='stylesheet' href='/css/icons.css')
+        link(rel='stylesheet' href='/css/style.css')
         // Google Fonts
         link(href='https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800&display=swap' rel='stylesheet')
         link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap' rel='stylesheet')
@@ -29,82 +29,19 @@ html(lang='en')
                 block content
 
         //scripts
-        script(src='js/jquery-3.3.1.min.js')
-        script(src='js/jquery-migrate-3.0.0.min.js')
-        script(src='js/mmenu.min.js')
-        script(src='js/tippy.all.min.js')
-        script(src='js/simplebar.min.js')
-        script(src='js/bootstrap-slider.min.js')
-        script(src='js/bootstrap-select.min.js')
-        script(src='js/snackbar.js')
-        script(src='js/clipboard.min.js')
-        script(src='js/counterup.min.js')
-        script(src='js/magnific-popup.min.js')
-        script(src='js/slick.min.js')
-        script(src='js/custom_jquery.js')
+        script(src='/js/jquery-3.3.1.min.js')
+        script(src='/js/jquery-migrate-3.0.0.min.js')
+        script(src='/js/mmenu.min.js')
+        script(src='/js/tippy.all.min.js')
+        script(src='/js/simplebar.min.js')
+        script(src='/js/bootstrap-slider.min.js')
+        script(src='/js/bootstrap-select.min.js')
+        script(src='/js/snackbar.js')
+        script(src='/js/clipboard.min.js')
+        script(src='/js/counterup.min.js')
+        script(src='/js/magnific-popup.min.js')
+        script(src='/js/slick.min.js')
+        script(src='/js/custom_jquery.js')
         // documentation: http://www.chartjs.org/docs/latest
-        script(src='js/chart.min.js')
-        script.
-            Chart.defaults.global.defaultFontFamily = "Nunito";
-            var config = {
-            type: "line",
-            data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
-            datasets: [
-            {
-            label: "View User",
-            backgroundColor: "rgba(255,138,0,0.08)" 
-            borderColor: "#ff8a00",
-            borderWidth: "3",
-            data: [799, 630, 636, 644, 722, 680, 799, 722, 836, 644, 722, 780],
-            pointRadius: 4,
-            titleFontSize: 18,
-            pointHoverRadius: 4,
-            pointHitRadius: 10,
-            pointBackgroundColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointBorderWidth: "3",
-            },
-            ],
-            },
-            options: {
-            responsive: true,
-            tooltips: {
-            backgroundColor: "#333",
-            titleFontSize: 15,
-            titleFontColor: "#fff",
-            bodyFontColor: "#fff",
-            bodyFontSize: 13,
-            displayColors: false,
-            xPadding: 10,
-            yPadding: 10,
-            intersect: false,
-            },
-            legend: { display: false },
-            title: { display: false },
-            scales: {
-            x: {
-            display: true,
-            scaleLabel: {
-            display: true,
-            labelString: "Month",
-            },
-            },
-            y: {
-            type: "category",
-            position: "left",
-            display: true,
-            scaleLabel: {
-            display: true,
-            labelString: "Request State",
-            },
-            reverse: true,
-            },
-            },
-            },
-            };
-            window.onload = function () {
-            var ctx = document.getElementById("canvas").getContext("2d");
-            window.myLine = new Chart(ctx, config);
-            };
-    block scripts
+        script(src='/js/chart.min.js')
+        block scripts

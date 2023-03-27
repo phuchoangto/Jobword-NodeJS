@@ -1,10 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
+const checkProfile = require('../middlewares/checkProfile');
 
-var homeController = require('../controllers/homeController');
-var authController = require('../controllers/authController');
-var dashboardController = require('../controllers/dashboardController');
+const homeController = require('../controllers/homeController');
+const authController = require('../controllers/authController');
+const dashboardController = require('../controllers/dashboardController');
 
 router.get('/', homeController.index);
 
@@ -16,5 +17,7 @@ router.get('/register', authController.register);
 router.post('/register', authController.create);
 
 router.get('/dashboard', ensureAuthenticated, dashboardController.index);
+router.get('/dashboard/profile', ensureAuthenticated, dashboardController.profile);
+router.post('/dashboard/profile', ensureAuthenticated, dashboardController.updateProfile);
 
 module.exports = router;

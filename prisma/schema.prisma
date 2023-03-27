@@ -33,36 +33,65 @@ enum JobStatus {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  username  String     @unique
-  password  String
-  verified  Boolean    @default(false)
-  role      Role       @default(JOB_SEEKER)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  JobSeeker JobSeeker?
-  Employer  Employer?
+  id            Int        @id @default(autoincrement())
+  email         String     @unique
+  username      String     @unique
+  password      String
+  verified      Boolean    @default(false)
+  role          Role       @default(JOB_SEEKER)
+  rememberToken String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  JobSeeker     JobSeeker?
+  Employer      Employer?
+}
+
+model Skill {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  JobSeekerSkill JobSeekerSkill[]
+  JobSkill       JobSkill[]
+}
+
+model Province {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  JobSeeker JobSeeker[]
+  Job       Job[]
+}
+
+model JobSeekerSkill {
+  jobSeekerId Int
+  jobSeeker   JobSeeker @relation(fields: [jobSeekerId], references: [id])
+  skillId     Int
+  skill       Skill     @relation(fields: [skillId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@id([jobSeekerId, skillId])
 }
 
 model JobSeeker {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
-  firstName String
-  lastName  String
-  bio       String?
-  skills    String?
-  email     String   @unique
-  phone     String
-  address   String
-  city      String
-  state     String
-  zip       String
-  country   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  CVs       CV[]
+  id             Int              @id @default(autoincrement())
+  userId         Int              @unique
+  user           User             @relation(fields: [userId], references: [id])
+  profilePic     String?
+  firstName      String
+  lastName       String
+  bio            String?
+  email          String
+  phone          String
+  address        String
+  provinceId     Int
+  province       Province         @relation(fields: [provinceId], references: [id])
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  CVs            CV[]
+  JobSeekerSkill JobSeekerSkill[]
 }
 
 model Employer {
@@ -76,8 +105,6 @@ model Employer {
   phone       String
   address     String
   city        String
-  state       String
-  zip         String
   country     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -100,8 +127,9 @@ model Job {
   category        JobCategory      @relation(fields: [categoryId], references: [id])
   title           String
   description     String
-  skills          String?
-  location        String
+  address         String
+  provinceId      Int
+  province        Province         @relation(fields: [provinceId], references: [id])
   salary          String?
   jobType         JobType
   experience      String?
@@ -111,6 +139,18 @@ model Job {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   JobApplications JobApplication[]
+  JobSkill        JobSkill[]
+}
+
+model JobSkill {
+  jobId     Int
+  job       Job      @relation(fields: [jobId], references: [id])
+  skillId   Int
+  skill     Skill    @relation(fields: [skillId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([jobId, skillId])
 }
 
 model CV {
