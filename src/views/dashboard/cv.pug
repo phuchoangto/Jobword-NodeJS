@@ -1,0 +1,177 @@
+extends ../layouts/dashboard
+
+block styles
+    link(rel='stylesheet' href='https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css')
+
+block content
+    // Dashboard Content
+    .utf-dashboard-content-container-aera(data-simplebar='')
+        #dashboard-titlebar.utf-dashboard-headline-item
+            .row
+                .col-xl-12
+                    h3 Manage Resume
+                    nav#breadcrumbs
+                        ul
+                            li
+                                a(href='index-1.html') Home
+                            li
+                                a(href='dashboard.html') Dashboard
+                            li Manage Resume
+        .utf-dashboard-content-inner-aera
+            .d-flex.justify-content-end.margin-bottom-24
+                a.button.utf-dashboard-button-item.popup-with-zoom-anim.button.ripple-effect(href='#small-dialog')
+                    i.icon-feather-plus
+                    |  Create New CV
+            .row
+                .col-xl-12
+                    .dashboard-box.margin-top-0
+                        .headline
+                            h3 Manage Resume List
+                        .content
+                            ul.utf-dashboard-box-list
+                                if cvs.length === 0
+                                    li
+                                        .utf-manage-resume-overview-aera.utf-manage-candidate
+                                            .utf-manage-resume-overview-aera-inner
+                                                .utf-manage-resume-item
+                                                    h4
+                                                        a(href='#') No CVs
+                                else
+                                    each cv in cvs
+                                        li(data-id=cv.id)
+                                            .utf-manage-resume-overview-aera.utf-manage-candidate
+                                                .utf-manage-resume-overview-aera-inner
+                                                    .utf-manage-resume-item
+                                                        h4
+                                                            a(href='#')= cv.title
+                                                            span.dashboard-status-button.green
+                                                                i.icon-material-outline-business-center
+                                                                |  Full Time
+                                                        span.utf-manage-resume-detail-item
+                                                            a(href='#')
+                                                                i.icon-feather-mail
+                                                                |  demo@example.com
+                                                        span.utf-manage-resume-detail-item
+                                                            i.icon-feather-phone
+                                                            |  (+12) 0123-654-987
+                                                        span.utf-manage-resume-detail-item
+                                                            a(href='#')
+                                                                i.icon-material-outline-location-on
+                                                                |  2767 Concord Street
+                                                        .utf-buttons-to-right
+                                                            a.button.green.ripple-effect.ico(href= cv.content title='Download CV' data-tippy-placement='top')
+                                                                i.icon-feather-download
+                                                            a.button.red.ripple-effect.ico(onclick='deleteCv(' + cv.id + ')' title='Delete CV' data-tippy-placement='top')
+                                                                i.icon-feather-trash-2
+                    // Pagination
+                    .clearfix
+                    .utf-pagination-container-aera.margin-top-20.margin-bottom-0
+                        nav.pagination
+                            ul
+                                if pagination.page > 1
+                                    li.utf-pagination-arrow
+                                        a.ripple-effect(href=`/dashboard/cv?limit=${pagination.limit}&page=${pagination.page - 1}`)
+                                            i.icon-material-outline-keyboard-arrow-left
+                                for index in [...Array(pagination.pageCount).keys()]
+                                    li
+                                        if pagination.page == index + 1
+                                            a.ripple-effect.current-page(href=`/dashboard/cv?limit=${pagination.limit}&page=${index + 1}`)= index + 1
+                                        else
+                                            a.ripple-effect(href=`/dashboard/cv?limit=${pagination.limit}&page=${index + 1}`)= index + 1
+                                // next
+                                if page < pageCount
+                                    li.utf-pagination-arrow
+                                        a.ripple-effect(href=`/dashboard/cv?limit=${limit}&page=${pagination.page + 1}`)
+                                            i.icon-material-outline-keyboard-arrow-right
+
+                    .clearfix
+            // Footer
+            .utf-dashboard-footer-spacer-aera
+            .utf-small-footer.margin-top-15
+                .utf-small-footer-copyrights Copyright © 2021 All Rights Reserved.
+    // Dashboard Content / End
+
+block modals
+    // Send Direct Message Popup
+    #small-dialog.zoom-anim-dialog.mfp-hide.dialog-with-tabs
+        .utf-signin-form-part
+            ul.utf-popup-tabs-nav-item
+                li.modal-title Create CV
+            .utf-popup-container-part-tabs
+                #tab.utf-popup-tab-content-item
+                    form#create-cv-form(action='/dashboard/cv' method='post')
+                        .utf-submit-field
+                            h5 Title
+                            input.utf-with-border(type='text' placeholder='e.g. Web Developer' name='title')
+                        .dropzone#pdf-dropzone
+                        button#save-button.button.full-width.utf-button-sliding-icon.ripple-effect(type='submit')
+                            | Save
+                            i.icon-feather-chevron-right
+    // Send Direct Message Popup / End
+
+block scripts
+    script(src='https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js')
+    script.
+        var pdfDropzone = new Dropzone('#pdf-dropzone', {
+            url: '/dashboard/cv',
+            paramName: 'cv',
+            maxFiles: 1,
+            acceptedFiles: 'application/pdf',
+            dictDefaultMessage: 'Drag and drop a PDF file here or click to select one.',
+            dictFileTooBig: 'File is too big ({{filesize}}MB). Max file size: {{maxFilesize}}MB.',
+            dictInvalidFileType: 'Only PDF files are allowed.',
+            dictResponseError: 'Server responded with {{statusCode}} code.',
+            addRemoveLinks: true,
+            autoProcessQueue: false,
+            init: function() {
+                this.on('sending', function(file, xhr, formData) {
+                    formData.append('title', $('#create-cv-form input[name="title"]').val());
+                });
+            }
+        });
+
+        // Log errors
+        pdfDropzone.on('error', function(file, errorMessage) {
+            console.log(errorMessage);
+        });
+
+        // iziToast
+        pdfDropzone.on('success', function(file, response) {
+            $('#small-dialog').magnificPopup('close');
+            $('#create-cv-form')[0].reset();
+            pdfDropzone.removeAllFiles();
+            iziToast.success({
+                title: 'Success',
+                message: 'CV created successfully.',
+            });
+        });
+
+        $('#create-cv-form').on('submit', function(e) {
+            e.preventDefault();
+            pdfDropzone.processQueue();
+        });
+
+        function deleteCv(id) {
+            // ask for confirmation
+            if (!confirm('Are you sure you want to delete this CV?')) {
+                return;
+            }
+            $.ajax({
+                url: '/dashboard/cv/' + id,
+                type: 'DELETE',
+                success: function(res) {
+                    // remove html element
+                    $('li[data-id="' + id + '"]').remove();
+                    iziToast.success({
+                        title: 'Success',
+                        message: res.message
+                    });
+                },
+                error: function(res) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: res.responseJSON.message
+                    });
+                }
+            });
+        }

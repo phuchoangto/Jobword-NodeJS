@@ -20,6 +20,7 @@ html(lang='en')
         link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap' rel='stylesheet')
         // iziToast
         link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css')
+        block styles
     body
         include ../partials/preloader
         // Wrapper
@@ -30,6 +31,7 @@ html(lang='en')
                 include ../partials/sidebar
                 block content
 
+        block modals
         //scripts
         script(src='/js/jquery-3.3.1.min.js')
         script(src='/js/jquery-migrate-3.0.0.min.js')
@@ -47,4 +49,15 @@ html(lang='en')
         script(src='/js/slick.min.js')
         script(src='/js/custom_jquery.js')
         script(src='/js/chart.min.js')
+        script.
+            $(document).ready(function() {
+                var url = window.location.pathname.replace(/\/$/, "");
+                var activePage = url.substring(url.lastIndexOf('/') + 1);
+                $('.utf-dashboard-nav ul li a').each(function() {
+                    var linkPage = this.href.substring(this.href.lastIndexOf('/') + 1);
+                    if (activePage == linkPage) {
+                        $(this).parent().addClass('active');
+                    }
+                });
+            });
         block scripts

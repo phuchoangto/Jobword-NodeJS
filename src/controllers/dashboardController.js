@@ -76,7 +76,9 @@ module.exports = {
                         email,
                         bio,
                         profilePic,
-                        provinceId: parseInt(provinceId),
+                        province: {
+                            connect: { id: parseInt(provinceId) }
+                        },
                         address,
                         phone,
                     }
@@ -105,7 +107,9 @@ module.exports = {
                         email,
                         bio,
                         profilePic,
-                        provinceId: parseInt(provinceId),
+                        province: {
+                            connect: { id: parseInt(provinceId) }
+                        },
                         address,
                         phone,
                         user: {
