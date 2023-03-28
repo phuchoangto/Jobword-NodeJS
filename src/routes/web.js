@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
-const checkProfile = require('../middlewares/checkProfile');
 const multer = require('../config/multer');
 
 const homeController = require('../controllers/homeController');

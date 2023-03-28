@@ -4,7 +4,7 @@ const updateJobSeekerProfileSchema = require('../validation/updateJobSeekerProfi
 const prisma = require('../config/prisma');
 const bcrypt = require('bcryptjs');
 const { Role } = require('@prisma/client');
-const upload  = require('../config/multer');
+const upload = require('../config/upload');
 
 async function updateJobSeekerSkill(jobSeekerId, skillIds) {
     const jobSeeker = await prisma.jobSeeker.update({
@@ -35,32 +35,31 @@ module.exports = {
 
 
     updateProfile: async (req, res, next) => {
-        let { firstName, lastName, email, bio, provinceId, address, phone, skillIds, profilePic } = req.body;
+        let { profilePic, firstName, lastName, email, bio, provinceId, address, phone, skillIds } = req.body;
 
-        const validation = updateJobSeekerProfileSchema.validate({ firstName, lastName, email, bio, provinceId, address, profilePic, phone, skillIds });
+        const validation = updateJobSeekerProfileSchema.validate({ profilePic, firstName, lastName, email, bio, provinceId, address, phone, skillIds });
 
         if (validation.error) {
-            res.render('dashboard/job-seeker/profile', {
-                title: 'Profile',
-                jobSeeker: req.user.jobSeeker,
-                provinces: await prisma.province.findMany(),
-                skills: await prisma.skill.findMany(),
-                errors: validation.error.details
-            });
+            console.log(validation.error.details);
+            res.status(400).json({ message: 'Invalid data', errors: validation.error.details });
         }
 
         else {
+
             // if skillIds is empty, set it to an empty array
             if (!skillIds) {
                 skillIds = [];
             }
 
-            console.log(profilePic);
-
-            // upload profile pic
-            if (profilePic) {
-                const { filename } = await upload.single('profilePic');
-                profilePic = filename;
+            if (req.file) {
+                // Upload the profile picture to S3
+                try {
+                    const uploadResult = await upload(`profile-pics/${req.user.id}.${req.file.mimetype.split('/')[1]}`, req.file.buffer);
+                    profilePic = uploadResult.Location;
+                } catch (err) {
+                    console.log(err);
+                    res.status(500).json({message: 'Error uploading profile picture', errors: err});
+                }
             }
 
             // Check if the user already has a JobSeeker profile
@@ -126,7 +125,7 @@ module.exports = {
                 }
             }
 
-            res.redirect('/dashboard/profile');
+            res.status(200).json({ message: 'Profile updated successfully' });
         }
     }
 };

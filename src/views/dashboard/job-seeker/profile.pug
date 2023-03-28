@@ -15,7 +15,7 @@ block content
                 a(href='dashboard.html') Dashboard
               li My Profile
     .utf-dashboard-content-inner-aera
-      form(method='post' action='/dashboard/profile')
+      form#update-profile-form(method='post' action='/dashboard/profile' enctype='multipart/form-data')
         .row
           .col-xl-12
             .dashboard-box.margin-top-0.margin-bottom-30
@@ -34,9 +34,9 @@ block content
                         .row
                           .col-xl-5.col-md-3.col-sm-4
                             .utf-avatar-wrapper(data-tippy-placement='top' title='Change Profile Picture')
-                              img.profile-pic(src='/images/user-avatar-placeholder.png' alt='')
-                              .multer-button
-                              input.file-multer(type='file' accept='image/*' name='profilePic')
+                              img.profile-pic(src= (jobSeeker && jobSeeker.profilePic ? jobSeeker.profilePic : '/images/user-avatar-placeholder.png') alt='')
+                              .upload-button
+                              input.file-upload(type='file' accept='image/*' name='profilePic')
                           .col-xl-7.col-md-9.col-sm-8
                             .utf-submit-field
                               h5 First Name
@@ -71,9 +71,46 @@ block content
                             if skills
                               each skill in skills
                                 option(value=skill.id selected=(jobSeeker && jobSeeker.JobSeekerSkill ? jobSeeker.JobSeekerSkill.map(s => s.skillId).includes(skill.id) : false))= skill.name
-                button.button.ripple-effect.big.margin-top-10.margin-bottom-20(type='submit') Save Changes
+                button#save-button.button.ripple-effect.big.margin-top-10.margin-bottom-20(type='submit') Save Changes
       // Footer
       .utf-dashboard-footer-spacer-aera
       .utf-small-footer.margin-top-15
         .utf-small-footer-copyrights Copyright &copy; 2021 All Rights Reserved.
   // Dashboard Content / End
+
+block scripts
+  script.
+    $(document).ready(function() {
+      $('#update-profile-form').submit(function(e) {
+        $('#save-button').prop('disabled', true);
+        $('#save-button').html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+        e.preventDefault();
+        const form = $(this);
+        const formData = new FormData(form[0]);
+        $.ajax({
+          url: form.attr('action'),
+          type: form.attr('method'),
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(data) {
+            console.log(data);
+            iziToast.success({
+              title: 'Success',
+              message: data.message,
+            });
+          },
+          error: function(err) {
+            console.log(err);
+            iziToast.error({
+              title: 'Error',
+              message: err.responseJSON.message,
+            });
+          },
+          complete: function() {
+            $('#save-button').prop('disabled', false);
+            $('#save-button').html('Save Changes');
+          }
+        });
+      });
+    });

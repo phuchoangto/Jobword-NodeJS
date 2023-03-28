@@ -7,7 +7,7 @@ module.exports = Joi.object().options({ abortEarly: false }).keys({
     phone: Joi.string().required(),
     address: Joi.string().required(),
     provinceId: Joi.string().required(),
-    bio: Joi.string().optional(),
+    bio: Joi.string().allow('').optional(),
     skillIds: Joi.any().optional(),
-    profilePic: Joi.string().optional(),
+    profilePic: Joi.string().allow('').optional()
 });
