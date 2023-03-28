@@ -61,6 +61,7 @@ model Province {
   updatedAt DateTime    @updatedAt
   JobSeeker JobSeeker[]
   Job       Job[]
+  Employer  Employer[]
 }
 
 model JobSeekerSkill {
@@ -98,13 +99,14 @@ model Employer {
   userId      Int      @unique
   user        User     @relation(fields: [userId], references: [id])
   name        String
+  profilePic  String?
   description String?
   website     String?
   email       String   @unique
   phone       String
   address     String
-  city        String
-  country     String
+  provinceId  Int
+  province    Province @relation(fields: [provinceId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   jobs        Job[]

@@ -31,63 +31,71 @@ module.exports = {
                 skills: await prisma.skill.findMany(),
             });
         }
+        else if (req.user.role === Role.EMPLOYER) {
+            res.render('dashboard/employer-profile', {
+                title: 'Profile',
+                employer: await prisma.employer.findUnique({ where: { userId: req.user.id } }),
+                provinces: await prisma.province.findMany(),
+            });
+        }
     },
 
 
     updateProfile: async (req, res, next) => {
-        let { profilePic, firstName, lastName, email, bio, provinceId, address, phone, skillIds } = req.body;
+        if (req.user.role === Role.JOB_SEEKER) {
+            let { profilePic, firstName, lastName, email, bio, provinceId, address, phone, skillIds } = req.body;
 
-        const validation = updateJobSeekerProfileSchema.validate({ profilePic, firstName, lastName, email, bio, provinceId, address, phone, skillIds });
+            const validation = updateJobSeekerProfileSchema.validate({ profilePic, firstName, lastName, email, bio, provinceId, address, phone, skillIds });
 
-        if (validation.error) {
-            console.log(validation.error.details);
-            res.status(400).json({ message: 'Invalid data', errors: validation.error.details });
-        }
-
-        else {
-
-            // if skillIds is empty, set it to an empty array
-            if (!skillIds) {
-                skillIds = [];
+            if (validation.error) {
+                console.log(validation.error.details);
+                res.status(400).json({ message: 'Invalid data', errors: validation.error.details });
             }
 
-            if (req.file) {
-                // Upload the profile picture to S3
-                try {
-                    const uploadResult = await upload(`profile-pics/${req.user.id}.${req.file.mimetype.split('/')[1]}`, req.file.buffer);
-                    profilePic = uploadResult.Location;
-                } catch (err) {
-                    console.log(err);
-                    res.status(500).json({message: 'Error uploading profile picture', errors: err});
+            else {
+
+                // if skillIds is empty, set it to an empty array
+                if (!skillIds) {
+                    skillIds = [];
                 }
-            }
 
-            // Check if the user already has a JobSeeker profile
-            let jobSeeker = await prisma.jobSeeker.findFirst({
-                where: { userId: req.user.id }
-            });
-
-            if (jobSeeker) {
-                await prisma.jobSeeker.update({
-                    where: { id: jobSeeker.id },
-                    data: {
-                        firstName,
-                        lastName,
-                        email,
-                        bio,
-                        profilePic,
-                        province: {
-                            connect: { id: parseInt(provinceId) }
-                        },
-                        address,
-                        phone,
+                if (req.file) {
+                    // Upload the profile picture to S3
+                    try {
+                        const uploadResult = await upload(`profile-pics/${req.user.id}.${req.file.mimetype.split('/')[1]}`, req.file.buffer);
+                        profilePic = uploadResult.Location;
+                    } catch (err) {
+                        console.log(err);
+                        res.status(500).json({message: 'Error uploading profile picture', errors: err});
                     }
+                }
+
+                // Check if the user already has a JobSeeker profile
+                let jobSeeker = await prisma.jobSeeker.findFirst({
+                    where: { userId: req.user.id }
                 });
 
-                // Delete existing JobSeekerSkill associations
-                await prisma.jobSeekerSkill.deleteMany({
-                    where: { jobSeekerId: jobSeeker.id }
-                });
+                if (jobSeeker) {
+                    await prisma.jobSeeker.update({
+                        where: { id: jobSeeker.id },
+                        data: {
+                            firstName,
+                            lastName,
+                            email,
+                            bio,
+                            profilePic,
+                            province: {
+                                connect: { id: parseInt(provinceId) }
+                            },
+                            address,
+                            phone,
+                        }
+                    });
+
+                    // Delete existing JobSeekerSkill associations
+                    await prisma.jobSeekerSkill.deleteMany({
+                        where: { jobSeekerId: jobSeeker.id }
+                    });
 
                 // Create new JobSeekerSkill associations
                 for (const skillId of skillIds) {
@@ -118,15 +126,75 @@ module.exports = {
                     }
                 });
 
-                // Create JobSeekerSkill associations for the new profile
-                for (const skillId of skillIds) {
-                    await prisma.jobSeekerSkill.create({
-                        data: {
-                            jobSeekerId: jobSeeker.id,
-                            skillId: parseInt(skillId)
-                        }
-                    });
+                    // Create JobSeekerSkill associations for the new profile
+                    for (const skillId of skillIds) {
+                        await prisma.jobSeekerSkill.create({
+                            data: {
+                                jobSeekerId: jobSeeker.id,
+                                skillId: parseInt(skillId)
+                            }
+                        });
+                    }
                 }
+
+                res.status(200).json({ message: 'Profile updated successfully' });
+            }
+        }
+        else if (req.user.role === Role.EMPLOYER) {
+            let { profilePic, name, email, website, description, provinceId, address, phone } = req.body;
+
+            if (req.file) {
+                // Upload the profile picture to S3
+                try {
+                    const uploadResult = await upload(`profile-pics/${req.user.id}.${req.file.mimetype.split('/')[1]}`, req.file.buffer);
+                    profilePic = uploadResult.Location;
+                } catch (err) {
+                    console.log(err);
+                    res.status(500).json({message: 'Error uploading profile picture', errors: err});
+                }
+            }
+
+            // Check if the user already has a Employer profile
+            let employer = await prisma.employer.findFirst({
+                where: { userId: req.user.id }
+            });
+
+            if (employer) {
+                await prisma.employer.update({
+                    where: { id: employer.id },
+                    data: {
+                        name,
+                        email,
+                        description,
+                        profilePic,
+                        website,
+                        province: {
+                            connect: { id: parseInt(provinceId) }
+                        },
+                        address,
+                        phone,
+                    }
+                });
+            }
+            else {
+                // If the profile doesn't exist, create a new one
+                employer = await prisma.employer.create({
+                    data: {
+                        name,
+                        email,
+                        description,
+                        profilePic,
+                        website,
+                        province: {
+                            connect: { id: parseInt(provinceId) }
+                        },
+                        address,
+                        phone,
+                        user: {
+                            connect: { id: req.user.id }
+                        }
+                    }
+                });
             }
 
             res.status(200).json({ message: 'Profile updated successfully' });
