@@ -1,0 +1,116 @@
+extends ../../layouts/dashboard
+
+block content
+  // Dashboard Content
+  .utf-dashboard-content-container-aera(data-simplebar='')
+    #dashboard-titlebar.utf-dashboard-headline-item
+      .row
+        .col-xl-12
+          h3 My Profile
+          nav#breadcrumbs
+            ul
+              li
+                a(href='index-1.html') Home
+              li
+                a(href='dashboard.html') Dashboard
+              li My Profile
+    .utf-dashboard-content-inner-aera
+      form#update-profile-form(method='post' action='/dashboard/profile' enctype='multipart/form-data')
+        .row
+          .col-xl-12
+            .dashboard-box.margin-top-0.margin-bottom-30
+              .headline
+                h3 My Profile Details
+              .content.with-padding.padding-bottom-0
+                .row
+                  .col
+                    .row
+                      .col-12
+                        if errors
+                          .notification.error
+                            each error in errors
+                              p= error.message
+                      .col-xl-12
+                        .row
+                          .col-xl-5.col-md-3.col-sm-4
+                            .utf-avatar-wrapper(data-tippy-placement='top' title='Change Profile Picture')
+                              img.profile-pic(src= (jobSeeker && jobSeeker.profilePic ? jobSeeker.profilePic : '/images/user-avatar-placeholder.png') alt='')
+                              .upload-button
+                              input.file-upload(type='file' accept='image/*' name='profilePic')
+                          .col-xl-7.col-md-9.col-sm-8
+                            .utf-submit-field
+                              h5 First Name
+                              input.utf-with-border(type='text' placeholder='John' name='firstName' value=(jobSeeker ? jobSeeker.firstName : ''))
+                            .utf-submit-field
+                              h5 Last Name
+                              input.utf-with-border(type='text' placeholder='Williams' name='lastName' value=(jobSeeker ? jobSeeker.lastName : ''))
+                            .utf-submit-field
+                              h5 Email Address
+                              input.utf-with-border(type='text' placeholder='john@example.com' name='email' value=(jobSeeker ? jobSeeker.email : ''))
+                            .utf-submit-field
+                              h5 Phone Number
+                              input.utf-with-border(type='text' placeholder='(+22) 1201 123-456' name='phone' value=(jobSeeker ? jobSeeker.phone : ''))
+                      .col-xl-12.col-md-6.col-sm-6
+                        .utf-submit-field
+                          h5 Address
+                          input.utf-with-border(type='text' placeholder='123 Main Street, New York, NY 10001' name='address' value=(jobSeeker ? jobSeeker.address : ''))
+                      .col-xl-12.col-md-6.col-sm-6
+                        .utf-submit-field
+                          h5 Province
+                          select.selectpicker.utf-with-border(data-size='10' title='Select Province' name='provinceId' data-live-search="true")
+                            each province in provinces
+                              option(value=province.id selected=(jobSeeker ? jobSeeker.provinceId === province.id : false))= province.name
+                      .col-xl-12.col-md-12.col-sm-12
+                        .utf-submit-field
+                          h5 Bio
+                          textarea.utf-with-border(name='bio' cols='20' rows='3' placeholder='Tell us a little about yourself')= jobSeeker ? jobSeeker.bio : ''
+                      .col-xl-12.col-md-6.col-sm-6
+                        .utf-submit-field
+                          h5 Skills
+                          select#select-skills.selectpicker.utf-with-border(data-size='10' title='Skills' name='skillIds' multiple data-live-search="true")
+                            if skills
+                              each skill in skills
+                                option(value=skill.id selected=(jobSeeker && jobSeeker.JobSeekerSkill ? jobSeeker.JobSeekerSkill.map(s => s.skillId).includes(skill.id) : false))= skill.name
+                button#save-button.button.ripple-effect.big.margin-top-10.margin-bottom-20(type='submit') Save Changes
+      // Footer
+      .utf-dashboard-footer-spacer-aera
+      .utf-small-footer.margin-top-15
+        .utf-small-footer-copyrights Copyright &copy; 2021 All Rights Reserved.
+  // Dashboard Content / End
+
+block scripts
+  script.
+    $(document).ready(function() {
+      $('#update-profile-form').submit(function(e) {
+        $('#save-button').prop('disabled', true);
+        $('#save-button').html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+        e.preventDefault();
+        const form = $(this);
+        const formData = new FormData(form[0]);
+        $.ajax({
+          url: form.attr('action'),
+          type: form.attr('method'),
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(data) {
+            console.log(data);
+            iziToast.success({
+              title: 'Success',
+              message: data.message,
+            });
+          },
+          error: function(err) {
+            console.log(err);
+            iziToast.error({
+              title: 'Error',
+              message: err.responseJSON.message,
+            });
+          },
+          complete: function() {
+            $('#save-button').prop('disabled', false);
+            $('#save-button').html('Save Changes');
+          }
+        });
+      });
+    });
