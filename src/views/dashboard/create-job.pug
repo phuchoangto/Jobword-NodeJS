@@ -1,5 +1,8 @@
 extends ../layouts/dashboard
 
+block styles
+    link(rel='stylesheet' href='//cdn.quilljs.com/1.3.6/quill.snow.css')
+
 block content
     // Dashboard Content
     .utf-dashboard-content-container-aera(data-simplebar='')
@@ -21,30 +24,30 @@ block content
                         .headline
                             h3 General Information
                         .content.with-padding.padding-bottom-10
-                            form#create-job-form(action='/dashboard/job' method='POST')
+                            form#create-job-form(method='POST')
                                 .row
                                     .col-xl-12.col-md-12.col-sm-12
                                         #error-container.notification.error(style='display: none')
                                     .col-xl-12.col-md-12.col-sm-12
                                         .utf-submit-field
                                             h5 Title
-                                            input.utf-with-border(type='text' placeholder='e.g. Web Developer' name='title')
+                                            input.utf-with-border(type='text' placeholder='e.g. Web Developer' name='title' value= (job && job.title) || '')
                                     .col-xl-6.col-md-6.col-sm-6
                                         .utf-submit-field
                                             h5 Job Category
                                             select.selectpicker.utf-with-border(data-size='7' title='Select Category' data-live-search='true' name='categoryId')
                                                 each category in categories
-                                                    option(value=category.id)= category.name
+                                                    option(value=category.id selected=(job && job.categoryId === category.id))= category.name
                                     .col-xl-6.col-md-6.col-sm-6
                                         .utf-submit-field
                                             h5 Experience
                                             select.selectpicker.utf-with-border(name='experienceYears')
-                                                option(value='0') No Experience
-                                                option(value='1') 1 Year
-                                                option(value='2') 2 Years
-                                                option(value='3') 3 Years
-                                                option(value='4') 4 Years
-                                                option(value='5') 5 Years
+                                                option(value='0' selected=(job && job.experienceYears === 0)) 0 Year
+                                                option(value='1' selected=(job && job.experienceYears === 1)) 1 Year
+                                                option(value='2' selected=(job && job.experienceYears === 2)) 2 Years
+                                                option(value='3' selected=(job && job.experienceYears === 3)) 3 Years
+                                                option(value='4' selected=(job && job.experienceYears === 4)) 4 Years
+                                                option(value='5' selected=(job && job.experienceYears === 5)) 5 Years
                                     .col-xl-6.col-md-6.col-sm-6
                                         .utf-submit-field
                                             h5 Job Type
@@ -52,36 +55,36 @@ block content
                                                 // display all job types from controller return JobType is prisma enum
                                                 each jobType in [JobType.FULL_TIME, JobType.PART_TIME, JobType.INTERNSHIP, JobType.REMOTE]
                                                     // display job type as value and string is job type in camel case
-                                                    option(value=jobType)= jobType.toString().replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+                                                    option(value=jobType selected=(job && job.jobType === jobType))= jobType.toString().replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
                                     .col-xl-6.col-md-6.col-sm-6
                                         .utf-submit-field
                                             h5 Location
                                             .utf-input-with-icon
-                                                input.utf-with-border(type='text' placeholder='e.g. 123 Main Street, New York' name='address')
+                                                input.utf-with-border(type='text' placeholder='e.g. 123 Main Street, New York' name='address' value= (job && job.address) || '')
                                                 i.icon-material-outline-location-on
                                     .col-xl-6.col-md-6.col-sm-6
                                         .utf-submit-field
                                             h5 Province
                                             select.selectpicker.utf-with-border(data-size='10' title='Select Province' name='provinceId' data-live-search="true")
                                                 each province in provinces
-                                                    option(value=province.id)= province.name
+                                                    option(value=province.id selected=(job && job.provinceId === province.id))= province.name
                                     .col-xl-6.col-md-6.col-sm-6
                                         .utf-submit-field
                                             h5 Currency
                                             select.selectpicker.utf-with-border(name='currency')
-                                                option(value='USD' selected) USD
-                                                option(value='VND') VND
+                                                option(value='USD' selected=(job && job.currency === 'USD')) USD
+                                                option(value='VND' selected=(job && job.currency === 'VND')) VND
                                     .col-xl-12.col-md-12.col-sm-12
                                         .utf-submit-field
                                             h5 Monthly Salary
                                             .row
                                                 .col-xl-6.col-md-6.col-sm-6
                                                     .utf-input-with-icon
-                                                        input.salary.utf-with-border(type='number' placeholder='Min Salary' name='minSalary')
+                                                        input.salary.utf-with-border(type='number' placeholder='Min Salary' name='minSalary' value= (job && job.minSalary) || '')
                                                         i.currency USD
                                                 .col-xl-6.col-md-6.col-sm-6
                                                     .utf-input-with-icon
-                                                        input.salary.utf-with-border(type='number' placeholder='Max Salary' name='maxSalary')
+                                                        input.salary.utf-with-border(type='number' placeholder='Max Salary' name='maxSalary' value= (job && job.maxSalary) || '')
                                                         i.currency USD
                                     .col-xl-12.col-md-12.col-sm-12
                                         .utf-submit-field
@@ -99,7 +102,7 @@ block content
                                     .col-xl-6.col-md-6.col-sm-6
                                         .utf-submit-field
                                             h5 Vacancies
-                                            input.utf-with-border(type='number' placeholder='e.g. 2' name='vacancies')
+                                            input.utf-with-border(type='number' placeholder='e.g. 2' name='vacancies' value= (job && job.vacancies) || '')
                                     .col-xl-6.col-md-6.col-sm-6
                                         .utf-submit-field
                                             h5 Deadline
@@ -107,7 +110,8 @@ block content
                                     .col-xl-12.col-md-12.col-sm-12
                                         .utf-submit-field
                                             h5 Job Description
-                                            textarea#description.utf-with-border(cols='40' rows='30' placeholder='Job Description...')
+                                            #description-editor
+                                                != (job && job.description)
             .utf-centered-button
                 button#save-button.button.utf-ripple-effect-dark.utf-button-sliding-icon.margin-top-0(type='submit' form='create-job-form')
                     | Submit Jobs
@@ -119,7 +123,7 @@ block content
     // Dashboard Content / End
 
 block scripts
-    script(src='https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js')
+    script(src='//cdn.quilljs.com/1.3.6/quill.min.js')
     script.
         $(document).ready(function() {
             // set deadline value and min value to today with time
@@ -128,38 +132,30 @@ block scripts
             $('input[name="deadline"]').val(todayString + 'T00:00');
             $('input[name="deadline"]').attr('min', todayString + 'T00:00');
 
+            let skills = `#{job && job.skills}`.split(',');
+            skills.forEach(skill => {
+                if (skill) {
+                    $('.keywords-list').append(`
+                        <span class="keyword">
+                            <span class="keyword-remove"></span>
+                            <span class="keyword-text">${skill}</span>
+                        </span>
+                    `);
+                }
+            });
+
             // CKEditor
-            ClassicEditor
-                .create(description, {
-                    toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-                    heading: {
-                        options: [{
-                                model: 'paragraph',
-                                title: 'Paragraph',
-                                class: 'ck-heading_paragraph'
-                            },
-                            {
-                                model: 'heading1',
-                                view: 'h1',
-                                title: 'Heading 1',
-                                class: 'ck-heading_heading1'
-                            },
-                            {
-                                model: 'heading2',
-                                view: 'h2',
-                                title: 'Heading 2',
-                                class: 'ck-heading_heading2'
-                            }
-                        ]
-                    },
-                    language: 'en'
-                })
-                .then(editor => {
-                    window.editor = editor;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+            let quill = new Quill('#description-editor', {
+                modules: {
+                    toolbar: [
+                        [{header: [1, 2, false]}],
+                        ['bold', 'italic', 'underline'],
+                        [{list: 'ordered'}, {list: 'bullet'}],
+                    ]
+                },
+                placeholder: 'Compose an epic...',
+                theme: 'snow',
+            });
 
             // when user select currency, change the currency icon
             $('select[name="currency"]').on('change', function() {
@@ -249,7 +245,7 @@ block scripts
                     let data = $(form).serializeArray();
 
                     // get description
-                    data.push({ name: 'description',value: editor.getData() });
+                    data.push({ name: 'description', value: quill.root.innerHTML });
 
                     // get skills
                     let skills = '';
@@ -266,7 +262,7 @@ block scripts
 
                     // send ajax
                     $.ajax({
-                        url: form.action,
+                        url: window.location.href,
                         type: form.method,
                         data: data,
                         success: function(res) {

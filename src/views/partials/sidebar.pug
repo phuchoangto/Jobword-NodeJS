@@ -26,11 +26,13 @@
               a(href='/dashboard/profile')
                 i.icon-line-awesome-user-secret
                 |  Manage Profile
-            li
-              a(href='/dashboard/cv')
-                i.icon-line-awesome-user-secret
-                |  Manage CV
-            li
-              a(href='/dashboard/job')
-                i.icon-line-awesome-user-secret
-                |  Manage Job Post
+            if user.role === 'JOB_SEEKER'
+              li
+                a(href='/dashboard/cv')
+                  i.icon-line-awesome-user-secret
+                  |  Manage CV
+            if user.role === 'EMPLOYER'
+              li
+                a(href='/dashboard/job')
+                  i.icon-line-awesome-user-secret
+                  |  Manage Job Post

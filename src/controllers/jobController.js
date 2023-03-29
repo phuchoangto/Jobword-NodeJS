@@ -54,6 +54,32 @@ module.exports = {
         }
     ],
 
+    edit: [
+        isRole(Role.EMPLOYER),
+        ensureUserHasProfile,
+        async (req, res, next) => {
+            // check permission
+            let job = await prisma.job.findUnique({
+                where: { id: parseInt(req.params.id) },
+                include: { employer: true }
+            });
+            if (job.employer.userId !== req.user.id) {
+                res.status(403).json({ message: 'Forbidden' });
+                return;
+            }
+
+            // get data
+            const categories = await prisma.jobCategory.findMany();
+            const provinces = await prisma.province.findMany();
+            job = await prisma.job.findUnique({
+                where: { id: parseInt(req.params.id) },
+                include: { category: true, province: true }
+            });
+            const today = new Date();
+            res.render('dashboard/create-job', { title: 'Edit Job', categories, provinces, today, JobType, job });
+        },
+    ],
+
     store: [
         isRole(Role.EMPLOYER),
         ensureUserHasProfile,
@@ -68,18 +94,39 @@ module.exports = {
             const { categoryId, provinceId, experienceYears, deadline, ...value } = validation.value;
 
             const employer = await prisma.employer.findUnique({ where: { userId: req.user.id } });
-            const job = await prisma.job.create({
-                data: {
-                    ...value,
-                    experienceYears: parseInt(experienceYears),
-                    deadline: new Date(deadline),
-                    employer: { connect: { id: employer.id } },
-                    province: { connect: { id: parseInt(provinceId) } },
-                    category: { connect: { id: parseInt(categoryId) } },
-                }
-            });
 
-            res.status(200).json({ message: 'Job created successfully', job });
+            const jobData = {
+                ...value,
+                experienceYears: parseInt(experienceYears),
+                deadline: new Date(deadline),
+                employer: { connect: { id: employer.id } },
+                province: { connect: { id: parseInt(provinceId) } },
+                category: { connect: { id: parseInt(categoryId) } },
+            };
+
+            if (req.params.id) {
+                // check if user has permission to edit this job
+                const job = await prisma.job.findUnique({
+                    where: { id: parseInt(req.params.id) },
+                    include: { employer: true }
+                });
+
+                if (job.employer.userId !== req.user.id) {
+                    res.status(403).json({ message: 'Permission denied' });
+                    return;
+                }
+
+                const updatedJob = await prisma.job.update({
+                    where: { id: parseInt(req.params.id) },
+                    data: jobData
+                });
+
+                res.status(200).json({ message: 'Job updated successfully', job: updatedJob });
+                return;
+            }
+
+            const job = await prisma.job.create({ data: jobData });
+            res.status(200).json({ message: 'Job saved successfully', job });
         }
     ]
 }

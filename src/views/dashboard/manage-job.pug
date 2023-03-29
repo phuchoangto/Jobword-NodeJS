@@ -61,7 +61,7 @@ block content
                                                                 i.icon-material-outline-location-on
                                                                 |  #{formatDateTime(job.deadline)}
                                                         .utf-buttons-to-right
-                                                            a.button.green.ripple-effect.ico(title='Edit Job' data-tippy-placement='top')
+                                                            a.button.green.ripple-effect.ico(title='Edit Job' data-tippy-placement='top' href=`/dashboard/job/edit/${job.id}`)
                                                                 i.icon-feather-edit
                                                             a.button.red.ripple-effect.ico(title='Delete Job' data-tippy-placement='top')
                                                                 i.icon-feather-trash-2
