@@ -103,7 +103,7 @@ model Employer {
   profilePic  String?
   description String?
   website     String?
-  email       String   @unique
+  email       String
   phone       String
   address     String
   provinceId  Int
