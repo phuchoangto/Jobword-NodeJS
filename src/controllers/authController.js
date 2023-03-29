@@ -6,13 +6,17 @@ const { Role } = require('@prisma/client');
 
 module.exports = {
     login: async (req, res, next) => {
-        res.render('auth/login', { title: 'Login' });
+        const redirect = req.query.redirect || '/';
+        res.render('auth/login', { title: 'Login', redirect });
     },
 
-    authenticate: passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/login',
-    }),
+    authenticate: async (req, res, next) => {
+        const redirect = req.query.redirect || '/';
+        passport.authenticate('local', {
+            successRedirect: redirect,
+            failureRedirect: '/login',
+        })(req, res, next);
+    },
 
     logout: (req, res, next) => {
         req.logout((err) => {

@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 const { Role } = require('@prisma/client');
 const upload = require('../config/upload');
 const multer = require('../config/multer');
-const paginate = require('express-paginate');
 const ensureUserHasProfile = require('../middlewares/ensureUserHasProfile');
 const isRole = require('../middlewares/isRole');
 const paginate = require('../config/pagination');

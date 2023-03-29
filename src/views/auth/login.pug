@@ -14,7 +14,7 @@ block content
             span
               | Don't Have an Account? 
               a(href='/register') Sign Up!
-          form#login-form(method='post' action='/login')
+          form#login-form(method='post' action=`/login?redirect=${redirect}`)
             .utf-no-border
               input#emailaddress.utf-with-border(type='text' name='email' placeholder='Email Address' required='' value='me@phuc.to')
             .utf-no-border
