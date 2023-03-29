@@ -109,10 +109,47 @@ async function seedUsers() {
     });
 }
 
+async function seedJobCategories() {
+    const categories = [
+        { name: 'Sales' },
+        { name: 'Marketing' },
+        { name: 'Media' },
+        { name: 'Design' },
+        { name: 'Engineering' },
+        { name: 'Real Estate' },
+        { name: 'Finance' },
+        { name: 'Translation' },
+        { name: 'Content Creation' },
+        { name: 'Software Development' },
+        { name: 'Customer Service' },
+        { name: 'Legal' },
+        { name: 'Education' },
+        { name: 'Healthcare' },
+        { name: 'Accounting' },
+        { name: 'Human Resources' },
+        { name: 'Telecommunications' },
+        { name: 'Travel' },
+        { name: 'Hospitality' },
+        { name: 'Airline' },
+        { name: 'Logistics' },
+        { name: 'Hotel / Restaurant' },
+        { name: 'Hardware / Networking' },
+    ];
+
+    for (const category of categories) {
+        await prisma.jobCategory.upsert({
+            where: { name: category.name },
+            update: {},
+            create: category,
+        });
+    }
+}
+
 async function main() {
     await seedProvinces();
     await seedUsers();
     await seedSkills();
+    await seedJobCategories();
 }
 
 main()

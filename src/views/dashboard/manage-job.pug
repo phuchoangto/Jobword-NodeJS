@@ -37,13 +37,13 @@ block content
                                                     h4
                                                         a(href='#') No CVs
                                 else
-                                    each cv in cvs
+                                    each job in jobs
                                         li(data-id=cv.id)
                                             .utf-manage-resume-overview-aera.utf-manage-candidate
                                                 .utf-manage-resume-overview-aera-inner
                                                     .utf-manage-resume-item
                                                         h4
-                                                            a(href='#')= cv.title
+                                                            a(href='#')= job.title
                                                             span.dashboard-status-button.green
                                                                 i.icon-material-outline-business-center
                                                                 |  Full Time
@@ -58,11 +58,11 @@ block content
                                                             a(href='#')
                                                                 i.icon-material-outline-location-on
                                                                 |  2767 Concord Street
-                                                        .utf-buttons-to-right
-                                                            a.button.green.ripple-effect.ico(href= cv.content title='Download CV' data-tippy-placement='top')
-                                                                i.icon-feather-download
-                                                            a.button.red.ripple-effect.ico(onclick='deleteCv(' + cv.id + ')' title='Delete CV' data-tippy-placement='top')
-                                                                i.icon-feather-trash-2
+                                                        //.utf-buttons-to-right
+                                                        //    a.button.green.ripple-effect.ico(href= cv.content title='Download CV' data-tippy-placement='top')
+                                                        //        i.icon-feather-download
+                                                        //    a.button.red.ripple-effect.ico(onclick='deleteCv(' + cv.id + ')' title='Delete CV' data-tippy-placement='top')
+                                                        //        i.icon-feather-trash-2
                     // Pagination
                     .clearfix
                     .utf-pagination-container-aera.margin-top-20.margin-bottom-0
