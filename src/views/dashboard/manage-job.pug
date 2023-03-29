@@ -79,98 +79,14 @@ block content
                                         else
                                             a.ripple-effect(href=`/dashboard/cv?limit=${pagination.limit}&page=${index + 1}`)= index + 1
                                 // next
-                                if pagination.page < pagination.pageCount
+                                if page < pageCount
                                     li.utf-pagination-arrow
-                                        a.ripple-effect(href=`/dashboard/cv?limit=${pagination.limit}&page=${pagination.page + 1}`)
+                                        a.ripple-effect(href=`/dashboard/cv?limit=${limit}&page=${pagination.page + 1}`)
                                             i.icon-material-outline-keyboard-arrow-right
+
                     .clearfix
             // Footer
             .utf-dashboard-footer-spacer-aera
             .utf-small-footer.margin-top-15
                 .utf-small-footer-copyrights Copyright © 2021 All Rights Reserved.
     // Dashboard Content / End
-
-block modals
-    // Send Direct Message Popup
-    #small-dialog.zoom-anim-dialog.mfp-hide.dialog-with-tabs
-        .utf-signin-form-part
-            ul.utf-popup-tabs-nav-item
-                li.modal-title Create CV
-            .utf-popup-container-part-tabs
-                #tab.utf-popup-tab-content-item
-                    form#create-cv-form(action='/dashboard/cv' method='post')
-                        .utf-submit-field
-                            h5 Title
-                            input.utf-with-border(type='text' placeholder='e.g. Web Developer' name='title')
-                        .dropzone#pdf-dropzone
-                        button#save-button.button.full-width.utf-button-sliding-icon.ripple-effect(type='submit')
-                            | Save
-                            i.icon-feather-chevron-right
-    // Send Direct Message Popup / End
-
-block scripts
-    script(src='https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js')
-    script.
-        var pdfDropzone = new Dropzone('#pdf-dropzone', {
-            url: '/dashboard/cv',
-            paramName: 'cv',
-            maxFiles: 1,
-            acceptedFiles: 'application/pdf',
-            dictDefaultMessage: 'Drag and drop a PDF file here or click to select one.',
-            dictFileTooBig: 'File is too big ({{filesize}}MB). Max file size: {{maxFilesize}}MB.',
-            dictInvalidFileType: 'Only PDF files are allowed.',
-            dictResponseError: 'Server responded with {{statusCode}} code.',
-            addRemoveLinks: true,
-            autoProcessQueue: false,
-            init: function() {
-                this.on('sending', function(file, xhr, formData) {
-                    formData.append('title', $('#create-cv-form input[name="title"]').val());
-                });
-            }
-        });
-
-        // Log errors
-        pdfDropzone.on('error', function(file, errorMessage) {
-            console.log(errorMessage);
-        });
-
-        // iziToast
-        pdfDropzone.on('success', function(file, response) {
-            $('#small-dialog').magnificPopup('close');
-            $('#create-cv-form')[0].reset();
-            pdfDropzone.removeAllFiles();
-            iziToast.success({
-                title: 'Success',
-                message: 'CV created successfully.',
-            });
-        });
-
-        $('#create-cv-form').on('submit', function(e) {
-            e.preventDefault();
-            pdfDropzone.processQueue();
-        });
-
-        function deleteCv(id) {
-            // ask for confirmation
-            if (!confirm('Are you sure you want to delete this CV?')) {
-                return;
-            }
-            $.ajax({
-                url: '/dashboard/cv/' + id,
-                type: 'DELETE',
-                success: function(res) {
-                    // remove html element
-                    $('li[data-id="' + id + '"]').remove();
-                    iziToast.success({
-                        title: 'Success',
-                        message: res.message
-                    });
-                },
-                error: function(res) {
-                    iziToast.error({
-                        title: 'Error',
-                        message: res.responseJSON.message
-                    });
-                }
-            });
-        }

@@ -5,11 +5,13 @@ const bcrypt = require('bcryptjs');
 const { Role } = require('@prisma/client');
 const upload = require('../config/upload');
 const multer = require('../config/multer');
-const paginate = require('express-paginate');
 const ensureUserHasProfile = require('../middlewares/ensureUserHasProfile');
+const isRole = require('../middlewares/isRole');
+const paginate = require('../config/pagination');
 
 module.exports = {
     index: [
+        isRole(Role.JOB_SEEKER),
         ensureUserHasProfile,
         async (req, res, next) => {
             const totalRecords = await prisma.cV.count({ where: { jobSeeker : { userId: req.user.id } } });
@@ -17,24 +19,20 @@ module.exports = {
                 res.render('dashboard/cv', {title: 'CV', cvs: [], pagination: {} });
                 return;
             }
-            let limit = parseInt(req.query.limit) || 10;
-            if (limit > totalRecords) limit = totalRecords;
-            const pageCount = Math.ceil(totalRecords / limit);
-            let page = parseInt(req.query.page) || 1;
-            if (page < 1) page = 1;
-            if (page > pageCount) page = pageCount;
-            let offset = (page - 1) * limit;
-            const pagination = { page, limit, pageCount, totalRecords };
+            const limit = parseInt(req.query.limit) || 10;
+            const page = parseInt(req.query.page) || 1;
+            const pagination = paginate(totalRecords, limit, page);
             const cvs = await prisma.cV.findMany({
                 where: { jobSeeker : { userId: req.user.id } },
-                take: limit,
-                skip: offset,
+                take: pagination.limit,
+                skip: pagination.offset,
             });
             res.render('dashboard/cv', {title: 'CV', cvs, pagination });
         }
     ],
 
     create: [
+        isRole(Role.JOB_SEEKER),
         ensureUserHasProfile,
         multer.single('cv'),
         async (req, res, next) => {
@@ -65,6 +63,7 @@ module.exports = {
     ],
 
     delete: [
+        isRole(Role.JOB_SEEKER),
         ensureUserHasProfile,
         async (req, res, next) => {
             const { id } = req.params;

@@ -7,10 +7,11 @@ const s3 = new AWS.S3({
 
 const uploadFile = (fileName, fileContent) => {
     const params = {
-        Bucket: process.env.S3_BUCKET_NAME,
+        Bucket: process.env.AWS_BUCKET_NAME,
         Key: fileName,
         Body: fileContent,
         ACL: 'public-read',
+        Region: process.env.AWS_REGION,
     };
 
     return s3.upload(params).promise();
