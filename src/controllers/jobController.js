@@ -1,10 +1,5 @@
-const passport = require('../config/passport');
-const registerSchema = require('../validation/registerSchema');
 const prisma = require('../config/prisma');
-const bcrypt = require('bcryptjs');
 const { Role, JobType } = require('@prisma/client');
-const upload = require('../config/upload');
-const multer = require('../config/multer');
 const ensureUserHasProfile = require('../middlewares/ensureUserHasProfile');
 const isRole = require('../middlewares/isRole');
 const paginate = require('../config/pagination');
@@ -128,5 +123,13 @@ module.exports = {
             const job = await prisma.job.create({ data: jobData });
             res.status(200).json({ message: 'Job saved successfully', job });
         }
-    ]
+    ],
+
+    show: async (req, res, next) => {
+        const job = await prisma.job.findUnique({
+            where: { id: parseInt(req.params.id) },
+            include: { category: true, province: true, employer: true }
+        });
+        res.render('job/details', { title: job.title, job });
+    }
 }

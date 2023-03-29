@@ -6,6 +6,7 @@ const { Role } = require('@prisma/client');
 const upload = require('../config/upload');
 const multer = require('../config/multer');
 const ensureUserHasProfile = require('../middlewares/ensureUserHasProfile');
+const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
 const isRole = require('../middlewares/isRole');
 const paginate = require('../config/pagination');
 
@@ -74,6 +75,17 @@ module.exports = {
                 console.log(err);
                 res.status(500).json({ message: 'Error deleting CV', error: err });
             }
+        }
+    ],
+
+    getAll: [
+        ensureAuthenticated,
+        isRole(Role.JOB_SEEKER),
+        async (req, res, next) => {
+            const cvs = await prisma.cV.findMany({
+                where: { jobSeeker : { userId: req.user.id } },
+            });
+            res.status(200).json({ cvs });
         }
     ],
 }

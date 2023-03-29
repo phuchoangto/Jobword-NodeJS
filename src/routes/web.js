@@ -8,6 +8,7 @@ const authController = require('../controllers/authController');
 const dashboardController = require('../controllers/dashboardController');
 const cvController = require('../controllers/cvController');
 const jobController = require('../controllers/jobController');
+const jobApplicationController = require('../controllers/jobApplicationController');
 
 router.get('/', homeController.index);
 
@@ -25,12 +26,16 @@ router.post('/dashboard/profile', ensureAuthenticated, multer.single('profilePic
 router.get('/dashboard/cv', ensureAuthenticated, cvController.index);
 router.post('/dashboard/cv', ensureAuthenticated, cvController.create);
 router.delete('/dashboard/cv/:id', ensureAuthenticated, cvController.delete);
-
+router.get('/cv', cvController.getAll);
 
 router.get('/dashboard/job', ensureAuthenticated, jobController.index);
 router.get('/dashboard/job/create', ensureAuthenticated, jobController.create);
 router.post('/dashboard/job/create', ensureAuthenticated, jobController.store);
 router.get('/dashboard/job/edit/:id', ensureAuthenticated, jobController.edit);
 router.post('/dashboard/job/edit/:id', ensureAuthenticated, jobController.store);
+
+router.get('/job/:id', jobController.show);
+
+router.post('/job/:id/apply', jobApplicationController.apply);
 
 module.exports = router;

@@ -1,0 +1,299 @@
+extends ../layouts/main
+
+block content
+    // Titlebar
+    .single-page-header(data-background-image='/images/single-job.jpg')
+        .container
+            .row
+                .col-md-12
+                    .utf-single-page-header-inner-aera
+                        .utf-left-side
+                            .utf-header-image
+                                a(href='single-company-profile.html')
+                                    img(src= job.employer.profilePic alt='')
+                            .utf-header-details
+                                ul
+                                    li= job.employer.name
+                                h3= job.title
+                                h5(style='margin-right: 10px;')
+                                    i.icon-material-outline-business-center
+                                    |  #{job.jobType}
+                                h5(style='margin-right: 10px;')
+                                    i.icon-material-outline-location-on
+                                    |  #{job.province.name}
+                        .utf-right-side
+                            .salary-box
+                                a.apply-now-button.margin-top-0(onclick=`applyJob(${job.id})`)
+                                    | Apply For Jobs
+                                    i.icon-feather-chevron-right
+                                a.button.save-job-btn.margin-top-20
+                                    | Save For Jobs
+                                    i.icon-feather-chevron-right
+    // Page Content
+    .container
+        .row
+            .col-xl-8.col-lg-8.utf-content-right-offset-aera
+                .utf-single-page-section-aera
+                    .utf-boxed-list-headline-item
+                        h3
+                            i.icon-material-outline-description
+                            |  Jobs Description
+                    != job.description
+                    .row
+                        .col-xl-6.col-lg-6.col-sm-12
+                            a.apply-now-button.popup-with-zoom-anim.margin-top-0(href='#small-dialog')
+                                | Apply Now
+                                i.icon-feather-chevron-right
+                        .col-xl-6.col-lg-6.col-sm-12
+                            a.button.save-job-btn(href='#')
+                                | Get Job Alerts
+                                i.icon-feather-chevron-right
+                    .utf-detail-social-sharing.margin-top-25
+                        span
+                            strong Social Sharing:-
+                        ul.margin-top-15
+                            li
+                                a(href='#' title='Facebook' data-tippy-placement='top')
+                                    i.icon-brand-facebook-f
+                            li
+                                a(href='#' title='Twitter' data-tippy-placement='top')
+                                    i.icon-brand-twitter
+                            li
+                                a(href='#' title='LinkedIn' data-tippy-placement='top')
+                                    i.icon-brand-linkedin-in
+                            li
+                                a(href='#' title='Google Plus' data-tippy-placement='top')
+                                    i.icon-brand-google
+                            li
+                                a(href='#' title='Whatsapp' data-tippy-placement='top')
+                                    i.icon-brand-whatsapp
+                            li
+                                a(href='#' title='Pinterest' data-tippy-placement='top')
+                                    i.icon-brand-pinterest-p
+                .utf-boxed-list-item.margin-bottom-60
+                    .utf-boxed-list-headline-item
+                        h3
+                            i.icon-material-outline-business-center
+                            |  People Also Viewed
+                    .utf-listings-container-part.compact-list-layout
+                        a.utf-job-listing(href='single-job-page.html')
+                            .utf-job-listing-details
+                                .utf-job-listing-company-logo
+                                    img(src='/images/company_logo_1.png' alt='')
+                                .utf-job-listing-description
+                                    span.dashboard-status-button.utf-job-status-item.green
+                                        i.icon-material-outline-business-center
+                                        |  Full Time
+                                    h3.utf-job-listing-title Website Developer & Software Developer
+                                    .utf-job-listing-footer
+                                        ul
+                                            li
+                                                i.icon-feather-briefcase
+                                                |  Software Developer
+                                            li
+                                                i.icon-material-outline-account-balance-wallet
+                                                |  $35000-$38000
+                                            li
+                                                i.icon-material-outline-location-on
+                                                |  Drive Potsdam, NY 676
+                                            li
+                                                i.icon-material-outline-access-time
+                                                |  15 Minute Ago
+                            span.bookmark-icon
+                        a.utf-job-listing(href='single-job-page.html')
+                            .utf-job-listing-details
+                                .utf-job-listing-company-logo
+                                    img(src='/images/company_logo_2.png' alt='')
+                                .utf-job-listing-description
+                                    span.dashboard-status-button.utf-job-status-item.green
+                                        i.icon-material-outline-business-center
+                                        |  Full Time
+                                    h3.utf-job-listing-title Head of Developers & MySQL Developers
+                                    .utf-job-listing-footer
+                                        ul
+                                            li
+                                                i.icon-feather-briefcase
+                                                |  Software Developer
+                                            li
+                                                i.icon-material-outline-account-balance-wallet
+                                                |  $35000-$38000
+                                            li
+                                                i.icon-material-outline-location-on
+                                                |  Drive Potsdam, NY 676
+                                            li
+                                                i.icon-material-outline-access-time
+                                                |  30 Minute Ago
+                            span.bookmark-icon
+                        a.utf-job-listing(href='single-job-page.html')
+                            .utf-job-listing-details
+                                .utf-job-listing-company-logo
+                                    img(src='/images/company_logo_3.png' alt='')
+                                .utf-job-listing-description
+                                    span.dashboard-status-button.utf-job-status-item.green
+                                        i.icon-material-outline-business-center
+                                        |  Full Time
+                                    h3.utf-job-listing-title Frontend/Backendd Developer
+                                    .utf-job-listing-footer
+                                        ul
+                                            li
+                                                i.icon-feather-briefcase
+                                                |  Software Developer
+                                            li
+                                                i.icon-material-outline-account-balance-wallet
+                                                |  $35000-$38000
+                                            li
+                                                i.icon-material-outline-location-on
+                                                |  Drive Potsdam, NY 676
+                                            li
+                                                i.icon-material-outline-access-time
+                                                |  55 Minute Ago
+                            span.bookmark-icon
+                        a.utf-job-listing(href='single-job-page.html')
+                            .utf-job-listing-details
+                                .utf-job-listing-company-logo
+                                    img(src='/images/company_logo_4.png' alt='')
+                                .utf-job-listing-description
+                                    span.dashboard-status-button.utf-job-status-item.yellow
+                                        i.icon-material-outline-business-center
+                                        |  Part Time
+                                    h3.utf-job-listing-title Application Developer & Web Designer
+                                    .utf-job-listing-footer
+                                        ul
+                                            li
+                                                i.icon-feather-briefcase
+                                                |  Software Developer
+                                            li
+                                                i.icon-material-outline-account-balance-wallet
+                                                |  $35000-$38000
+                                            li
+                                                i.icon-material-outline-location-on
+                                                |  Drive Potsdam, NY 676
+                                            li
+                                                i.icon-material-outline-access-time
+                                                |  1 Days Ago
+                            span.bookmark-icon
+                    .utf-centered-button.margin-top-10
+                        a.button.utf-button-sliding-icon(href='jobs-list-layout-leftside.html')
+                            | View More Jobs
+                            i.icon-feather-chevron-right
+            // Sidebar
+            .col-xl-4.col-lg-4
+                .utf-sidebar-container-aera
+                    .utf-sidebar-widget-item
+                        h3 Offered Salary
+                        .utf-right-side
+                            .salary-box
+                                - var hasSalary = job.minSalary && job.maxSalary
+                                .salary-amount= hasSalary ? `${job.minSalary.toLocaleString()} ${job.currency} - ${job.maxSalary.toLocaleString()} ${job.currency}` : 'Negotiable'
+                    .utf-sidebar-widget-item
+                        .utf-job-overview
+                            .utf-job-overview-headline Jobs Position Information
+                            .utf-job-overview-inner
+                                ul
+                                    li
+                                        i.icon-line-awesome-glass
+                                        span Experience
+                                        h5= job.experienceYears > 0 ? `${job.experienceYears} Years` : 'No Experience'
+                                    li
+                                        i.icon-material-outline-location-on
+                                        span Location
+                                        h5= job.province.name
+                                    li
+                                        i.icon-material-outline-business-center
+                                        span Jobs Type
+                                        h5= job.jobType.toString().replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+                                    li
+                                        i.icon-material-outline-access-time
+                                        span Deadline
+                                        // dead line date time dd/mm/yyyy HH:MM
+                                        h5= job.deadline.toLocaleString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})
+                    .utf-sidebar-widget-item
+                        h3 Tags Cloud
+                        .task-tags
+                            - var skills = job.skills.split(',')
+                            each skill in skills
+                                a(href='#')
+                                    span= skill
+
+block modals
+    a#open-dialog.popup-with-zoom-anim(href='#small-dialog' style='display: none;')
+    // Send Direct Message Popup
+    #small-dialog.zoom-anim-dialog.mfp-hide.dialog-with-tabs
+        .utf-signin-form-part
+            ul.utf-popup-tabs-nav-item
+                li.modal-title Select CV
+            .utf-popup-container-part-tabs
+                #tab.utf-popup-tab-content-item
+                    form#apply-form(action=`/job/${job.id}/apply` method='POST')
+                        .utf-submit-field
+                            h5 Title
+                            select#select-cv.selectpicker.utf-with-border(title='Select CV' name='cvId')
+                        button#save-button.button.full-width.utf-button-sliding-icon.ripple-effect(type='submit')
+                            | Apply
+                            i.icon-feather-chevron-right
+    // Send Direct Message Popup / End
+
+
+block scripts
+    script.
+        function applyJob(jobId) {
+            $.ajax({
+                url: '/cv',
+                type: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data.cvs.length > 0) {
+                        // add options to select
+                        var select = $('#select-cv');
+                        data.cvs.forEach(function (cv) {
+                            select.append(`<option value="${cv.id}">${cv.title}</option>`);
+                        });
+                        // refresh select
+                        select.selectpicker('refresh');
+                        // open dialog
+                        $('#open-dialog').click();
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                    // check status code is 401
+                    if (err.status === 401) {
+                        // redirect to login page
+                        window.location.href = '/login?redirect=/job/' + jobId;
+                    } else {
+                        alert('You can not perform this action');
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#apply-form').submit(function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var button = $('#save-button');
+                button.prop('disabled', true);
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                    data: form.serialize(),
+                    success: function (data) {
+                        console.log(data);
+                        button.prop('disabled', false);
+                        $.magnificPopup.close();
+                        alert('Applied successfully');
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        button.prop('disabled', false);
+                        alert('You can not perform this action');
+                    }
+                });
+            });
+        });
