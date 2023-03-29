@@ -19,17 +19,19 @@ enum Role {
 enum JobType {
   FULL_TIME
   PART_TIME
-  CONTRACT
   INTERNSHIP
-  TEMPORARY
-  VOLUNTEER
-  OTHER
+  REMOTE
 }
 
 enum JobStatus {
   PUBLISHED
   DRAFT
   ARCHIVED
+}
+
+enum CURRENCY {
+  USD
+  VND
 }
 
 model User {
@@ -51,7 +53,6 @@ model Skill {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   JobSeekerSkill JobSeekerSkill[]
-  JobSkill       JobSkill[]
 }
 
 model Province {
@@ -127,31 +128,22 @@ model Job {
   categoryId      Int
   category        JobCategory      @relation(fields: [categoryId], references: [id])
   title           String
-  description     String
+  description     String           @db.LongText
   address         String
+  skills          String?
   provinceId      Int
   province        Province         @relation(fields: [provinceId], references: [id])
-  salary          String?
+  currency        CURRENCY         @default(VND)
+  minSalary       Int?
+  maxSalary       Int?
   jobType         JobType
-  experience      String?
-  numberOfVacancy Int?
+  experienceYears Int              @default(0)
+  vacancies       Int?
   deadline        DateTime
   jobStatus       JobStatus        @default(PUBLISHED)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   JobApplications JobApplication[]
-  JobSkill        JobSkill[]
-}
-
-model JobSkill {
-  jobId     Int
-  job       Job      @relation(fields: [jobId], references: [id])
-  skillId   Int
-  skill     Skill    @relation(fields: [skillId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@id([jobId, skillId])
 }
 
 model CV {

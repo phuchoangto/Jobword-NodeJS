@@ -28,5 +28,7 @@ router.delete('/dashboard/cv/:id', ensureAuthenticated, cvController.delete);
 
 
 router.get('/dashboard/job', ensureAuthenticated, jobController.index);
+router.get('/dashboard/job/create', ensureAuthenticated, jobController.create);
+router.post('/dashboard/job', ensureAuthenticated, jobController.store);
 
 module.exports = router;

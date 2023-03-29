@@ -1,0 +1,295 @@
+extends ../layouts/dashboard
+
+block content
+    // Dashboard Content
+    .utf-dashboard-content-container-aera(data-simplebar='')
+        #dashboard-titlebar.utf-dashboard-headline-item
+            .row
+                .col-xl-12
+                    h3 Manage Jobs Post
+                    nav#breadcrumbs
+                        ul
+                            li
+                                a(href='index-1.html') Home
+                            li
+                                a(href='dashboard.html') Dashboard
+                            li Manage Jobs Post
+        .utf-dashboard-content-inner-aera
+            .row
+                .col-xl-12
+                    .dashboard-box
+                        .headline
+                            h3 General Information
+                        .content.with-padding.padding-bottom-10
+                            form#create-job-form(action='/dashboard/job' method='POST')
+                                .row
+                                    .col-xl-12.col-md-12.col-sm-12
+                                        #error-container.notification.error(style='display: none')
+                                    .col-xl-12.col-md-12.col-sm-12
+                                        .utf-submit-field
+                                            h5 Title
+                                            input.utf-with-border(type='text' placeholder='e.g. Web Developer' name='title')
+                                    .col-xl-6.col-md-6.col-sm-6
+                                        .utf-submit-field
+                                            h5 Job Category
+                                            select.selectpicker.utf-with-border(data-size='7' title='Select Category' data-live-search='true' name='categoryId')
+                                                each category in categories
+                                                    option(value=category.id)= category.name
+                                    .col-xl-6.col-md-6.col-sm-6
+                                        .utf-submit-field
+                                            h5 Experience
+                                            select.selectpicker.utf-with-border(name='experienceYears')
+                                                option(value='0') No Experience
+                                                option(value='1') 1 Year
+                                                option(value='2') 2 Years
+                                                option(value='3') 3 Years
+                                                option(value='4') 4 Years
+                                                option(value='5') 5 Years
+                                    .col-xl-6.col-md-6.col-sm-6
+                                        .utf-submit-field
+                                            h5 Job Type
+                                            select.selectpicker.utf-with-border(data-size='7' title='Select Job Type' name='jobType')
+                                                // display all job types from controller return JobType is prisma enum
+                                                each jobType in [JobType.FULL_TIME, JobType.PART_TIME, JobType.INTERNSHIP, JobType.REMOTE]
+                                                    // display job type as value and string is job type in camel case
+                                                    option(value=jobType)= jobType.toString().replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+                                    .col-xl-6.col-md-6.col-sm-6
+                                        .utf-submit-field
+                                            h5 Location
+                                            .utf-input-with-icon
+                                                input.utf-with-border(type='text' placeholder='e.g. 123 Main Street, New York' name='address')
+                                                i.icon-material-outline-location-on
+                                    .col-xl-6.col-md-6.col-sm-6
+                                        .utf-submit-field
+                                            h5 Province
+                                            select.selectpicker.utf-with-border(data-size='10' title='Select Province' name='provinceId' data-live-search="true")
+                                                each province in provinces
+                                                    option(value=province.id)= province.name
+                                    .col-xl-6.col-md-6.col-sm-6
+                                        .utf-submit-field
+                                            h5 Currency
+                                            select.selectpicker.utf-with-border(name='currency')
+                                                option(value='USD' selected) USD
+                                                option(value='VND') VND
+                                    .col-xl-12.col-md-12.col-sm-12
+                                        .utf-submit-field
+                                            h5 Monthly Salary
+                                            .row
+                                                .col-xl-6.col-md-6.col-sm-6
+                                                    .utf-input-with-icon
+                                                        input.salary.utf-with-border(type='number' placeholder='Min Salary' name='minSalary')
+                                                        i.currency USD
+                                                .col-xl-6.col-md-6.col-sm-6
+                                                    .utf-input-with-icon
+                                                        input.salary.utf-with-border(type='number' placeholder='Max Salary' name='maxSalary')
+                                                        i.currency USD
+                                    .col-xl-12.col-md-12.col-sm-12
+                                        .utf-submit-field
+                                            h5
+                                                | Job Skills
+                                                i.help-icon(data-tippy-placement='top' title='Maximum of 6 Skills')
+                                            .keywords-container
+                                                .keyword-input-container
+                                                    input.keyword-input.utf-with-border(type='text' placeholder='CSS, Photoshop, Js, Bootstrap')
+                                                    a.keyword-input-button.ripple-effect
+                                                        i.icon-material-outline-add
+                                                .keywords-list
+                                                    // keywords go here
+                                                .clearfix
+                                    .col-xl-6.col-md-6.col-sm-6
+                                        .utf-submit-field
+                                            h5 Vacancies
+                                            input.utf-with-border(type='number' placeholder='e.g. 2' name='vacancies')
+                                    .col-xl-6.col-md-6.col-sm-6
+                                        .utf-submit-field
+                                            h5 Deadline
+                                            input.utf-with-border(type='datetime-local' name='deadline')
+                                    .col-xl-12.col-md-12.col-sm-12
+                                        .utf-submit-field
+                                            h5 Job Description
+                                            textarea#description.utf-with-border(cols='40' rows='30' placeholder='Job Description...')
+            .utf-centered-button
+                button#save-button.button.utf-ripple-effect-dark.utf-button-sliding-icon.margin-top-0(type='submit' form='create-job-form')
+                    | Submit Jobs
+                    i.icon-feather-plus
+            // Footer
+            .utf-dashboard-footer-spacer-aera
+            .utf-small-footer.margin-top-15
+                .utf-small-footer-copyrights Copyright © 2021 All Rights Reserved.
+    // Dashboard Content / End
+
+block scripts
+    script(src='https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js')
+    script.
+        $(document).ready(function() {
+            // set deadline value and min value to today with time
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0];
+            $('input[name="deadline"]').val(todayString + 'T00:00');
+            $('input[name="deadline"]').attr('min', todayString + 'T00:00');
+
+            // CKEditor
+            ClassicEditor
+                .create(description, {
+                    toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                    heading: {
+                        options: [{
+                                model: 'paragraph',
+                                title: 'Paragraph',
+                                class: 'ck-heading_paragraph'
+                            },
+                            {
+                                model: 'heading1',
+                                view: 'h1',
+                                title: 'Heading 1',
+                                class: 'ck-heading_heading1'
+                            },
+                            {
+                                model: 'heading2',
+                                view: 'h2',
+                                title: 'Heading 2',
+                                class: 'ck-heading_heading2'
+                            }
+                        ]
+                    },
+                    language: 'en'
+                })
+                .then(editor => {
+                    window.editor = editor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+            // when user select currency, change the currency icon
+            $('select[name="currency"]').on('change', function() {
+                const currency = $(this).val();
+                if (currency === 'USD') {
+                    $('.currency').text('USD');
+                } else {
+                    $('.currency').text('VND');
+                }
+            });
+
+            // validate form
+            $('#create-job-form').validate({
+                errorLabelContainer: '#error-container',
+                showErrors: function (errorMap, errorList) {
+                    this.defaultShowErrors();
+                    if (this.numberOfInvalids()) {
+                        $('#error-container').show();
+                    } else {
+                        $('#error-container').hide();
+                    }
+                },
+                rules: {
+                    title: {
+                        required: true,
+                    },
+                    jobType: {
+                        required: true
+                    },
+                    address: {
+                        required: true,
+                    },
+                    provinceId: {
+                        required: true
+                    },
+                    currency: {
+                        required: true
+                    },
+                    minSalary: {
+                        number: true
+                    },
+                    maxSalary: {
+                        number: true
+                    },
+                    vacancies: {
+                        number: true
+                    },
+                    deadline: {
+                        required: true
+                    },
+                },
+                messages: {
+                    title: {
+                        required: 'Please enter job title',
+                    },
+                    jobType: {
+                        required: 'Please select job type'
+                    },
+                    address: {
+                        required: 'Please enter job address',
+                    },
+                    provinceId: {
+                        required: 'Please select province'
+                    },
+                    currency: {
+                        required: 'Please select currency'
+                    },
+                    minSalary: {
+                        number: 'Please enter a valid min salary'
+                    },
+                    maxSalary: {
+                        number: 'Please enter a valid max salary',
+
+                    },
+                    vacancies: {
+                        number: 'Please enter a valid vacancies'
+                    },
+                    deadline: {
+                        required: 'Please select deadline'
+                    },
+                },
+                submitHandler: function(form, event) {
+                    $('#save-button').prop('disabled', true);
+                    $('#save-button').html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+
+                    event.preventDefault();
+                    let data = $(form).serializeArray();
+
+                    // get description
+                    data.push({ name: 'description',value: editor.getData() });
+
+                    // get skills
+                    let skills = '';
+                    $('.keyword-text').each(function() {
+                        skills += $(this).text() + ', ';
+                    });
+                    skills = skills.slice(0, -2);
+                    data.push({ name: 'skills', value: skills });
+
+                    // remove empty fields
+                    data = data.filter(function(item) {
+                        return item.value !== '';
+                    });
+
+                    // send ajax
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: data,
+                        success: function(res) {
+                            iziToast.success({
+                                title: 'Success',
+                                message: res.message,
+                                onClosing: function() {
+                                    window.location.href = '/dashboard/job';
+                                }
+                            });
+                        },
+                        error: function(res) {
+                            iziToast.error({
+                                title: 'Error',
+                                message: res.responseJSON.message,
+                            });
+                        },
+                        complete: function() {
+                            $('#save-button').prop('disabled', false);
+                            $('#save-button').html('Submit Jobs <i class="icon-feather-plus"></i>');
+                        }
+                    });
+                }
+            });
+        });
+

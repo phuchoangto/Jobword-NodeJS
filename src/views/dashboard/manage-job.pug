@@ -1,44 +1,46 @@
 extends ../layouts/dashboard
 
-block styles
-    link(rel='stylesheet' href='https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css')
+
 
 block content
+    - function formatDateTime(date) {
+    -    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes();
+    - }
     // Dashboard Content
     .utf-dashboard-content-container-aera(data-simplebar='')
         #dashboard-titlebar.utf-dashboard-headline-item
             .row
                 .col-xl-12
-                    h3 Manage Resume
+                    h3 Manage Jobs
                     nav#breadcrumbs
                         ul
                             li
                                 a(href='index-1.html') Home
                             li
                                 a(href='dashboard.html') Dashboard
-                            li Manage Resume
+                            li Manage Jobs
         .utf-dashboard-content-inner-aera
             .d-flex.justify-content-end.margin-bottom-24
-                a.button.utf-dashboard-button-item.popup-with-zoom-anim.button.ripple-effect(href='#small-dialog')
+                a.button.utf-dashboard-button-item(href='/dashboard/job/create')
                     i.icon-feather-plus
-                    |  Create New CV
+                    |  Create New Job
             .row
                 .col-xl-12
                     .dashboard-box.margin-top-0
                         .headline
-                            h3 Manage Resume List
+                            h3 Manage Job List
                         .content
                             ul.utf-dashboard-box-list
-                                if cvs.length === 0
+                                if jobs.length === 0
                                     li
                                         .utf-manage-resume-overview-aera.utf-manage-candidate
                                             .utf-manage-resume-overview-aera-inner
                                                 .utf-manage-resume-item
                                                     h4
-                                                        a(href='#') No CVs
+                                                        a(href='#') No job found
                                 else
                                     each job in jobs
-                                        li(data-id=cv.id)
+                                        li(data-id=job.id)
                                             .utf-manage-resume-overview-aera.utf-manage-candidate
                                                 .utf-manage-resume-overview-aera-inner
                                                     .utf-manage-resume-item
@@ -46,23 +48,23 @@ block content
                                                             a(href='#')= job.title
                                                             span.dashboard-status-button.green
                                                                 i.icon-material-outline-business-center
-                                                                |  Full Time
+                                                                |   #{job.jobStatus}
                                                         span.utf-manage-resume-detail-item
                                                             a(href='#')
                                                                 i.icon-feather-mail
-                                                                |  demo@example.com
+                                                                |   #{job.jobType.toString().replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())}
                                                         span.utf-manage-resume-detail-item
                                                             i.icon-feather-phone
-                                                            |  (+12) 0123-654-987
+                                                            |  #{job.category.name}
                                                         span.utf-manage-resume-detail-item
                                                             a(href='#')
                                                                 i.icon-material-outline-location-on
-                                                                |  2767 Concord Street
-                                                        //.utf-buttons-to-right
-                                                        //    a.button.green.ripple-effect.ico(href= cv.content title='Download CV' data-tippy-placement='top')
-                                                        //        i.icon-feather-download
-                                                        //    a.button.red.ripple-effect.ico(onclick='deleteCv(' + cv.id + ')' title='Delete CV' data-tippy-placement='top')
-                                                        //        i.icon-feather-trash-2
+                                                                |  #{formatDateTime(job.deadline)}
+                                                        .utf-buttons-to-right
+                                                            a.button.green.ripple-effect.ico(title='Edit Job' data-tippy-placement='top')
+                                                                i.icon-feather-edit
+                                                            a.button.red.ripple-effect.ico(title='Delete Job' data-tippy-placement='top')
+                                                                i.icon-feather-trash-2
                     // Pagination
                     .clearfix
                     .utf-pagination-container-aera.margin-top-20.margin-bottom-0
@@ -70,18 +72,18 @@ block content
                             ul
                                 if pagination.page > 1
                                     li.utf-pagination-arrow
-                                        a.ripple-effect(href=`/dashboard/cv?limit=${pagination.limit}&page=${pagination.page - 1}`)
+                                        a.ripple-effect(href=`/dashboard/job?limit=${pagination.limit}&page=${pagination.page - 1}`)
                                             i.icon-material-outline-keyboard-arrow-left
                                 for index in [...Array(pagination.pageCount).keys()]
                                     li
                                         if pagination.page == index + 1
-                                            a.ripple-effect.current-page(href=`/dashboard/cv?limit=${pagination.limit}&page=${index + 1}`)= index + 1
+                                            a.ripple-effect.current-page(href=`/dashboard/job?limit=${pagination.limit}&page=${index + 1}`)= index + 1
                                         else
-                                            a.ripple-effect(href=`/dashboard/cv?limit=${pagination.limit}&page=${index + 1}`)= index + 1
+                                            a.ripple-effect(href=`/dashboard/job?limit=${pagination.limit}&page=${index + 1}`)= index + 1
                                 // next
                                 if page < pageCount
                                     li.utf-pagination-arrow
-                                        a.ripple-effect(href=`/dashboard/cv?limit=${limit}&page=${pagination.page + 1}`)
+                                        a.ripple-effect(href=`/dashboard/job?limit=${limit}&page=${pagination.page + 1}`)
                                             i.icon-material-outline-keyboard-arrow-right
 
                     .clearfix
