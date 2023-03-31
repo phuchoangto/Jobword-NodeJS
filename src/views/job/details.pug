@@ -261,7 +261,6 @@ block scripts
                     console.log(err);
                     // check status code is 401
                     if (err.status === 401) {
-                        // redirect to login page
                         window.location.href = '/login?redirect=/job/' + jobId;
                     } else {
                         alert('You can not perform this action');
@@ -292,7 +291,7 @@ block scripts
                     error: function (err) {
                         console.log(err);
                         button.prop('disabled', false);
-                        alert('You can not perform this action');
+                        alert(err.responseJSON.message);
                     }
                 });
             });
